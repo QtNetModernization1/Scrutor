@@ -1,29 +1,20 @@
 ==========
 References
 ==========
-Scrutor
-System
-Microsoft.Extensions.DependencyInjection
-System.Linq
-System.Reflection
-System.Collections.Generic
-System.Runtime.InteropServices
-System.Globalization
-Microsoft.Extensions.DependencyModel
-System.ComponentModel
-System.Diagnostics.CodeAnalysis
-System.Diagnostics
-JetBrains.Annotations
-System.Runtime.CompilerServices
-Microsoft.Extensions.Internal
-
-Microsoft.Extensions.DependencyInjection.Extensions
-System.Text
-project.all
 Scrutor.Tests
 Xunit
+Microsoft.Extensions.DependencyInjection
+
+System.Linq
+System
+Scrutor
+System.Collections.Generic
 Scrutor.Tests.ChildNamespace
+System.Runtime.CompilerServices
 UnwantedNamespace
+<global namespace>
+Microsoft.VisualStudio.TestPlatform
+project.all
 
 ===============
 DownloadedFiles
@@ -34,7 +25,7 @@ project.all.json
 ProjectResults
 ==============
 ----------------------
-Showing results for: /tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/src/Scrutor/Scrutor.csproj
+Showing results for: /tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/test/Scrutor.Tests/Scrutor.Tests.csproj
 ----------------------
 ---------------------------
 Target Versions:
@@ -50,17 +41,6 @@ Upgrade packages:
 ---------------------------
 Action packages:
 ---------------------------
----------------------------
-Executed Actions for file: Project
----------------------------
-
-Action Type: ProjectFile
-Action Name: MigrateProjectFile
-Action Value: 
-Times Run: 1
-Executions With Error: 0
-Invalid Executions: 0
-
 
 ----------------------
 Showing results for: /tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/test/Scrutor.Tests/Scrutor.Tests.csproj
@@ -76,82 +56,9 @@ net48
 ---------------------------
 Upgrade packages:
 ---------------------------
-xunit,->2.4.2
-xunit.runner.visualstudio,->2.5.3
 ---------------------------
 Action packages:
 ---------------------------
----------------------------
-Executed Actions for file: Project
----------------------------
-
-Action Type: ProjectFile
-Action Name: MigrateProjectFile
-Action Value: 
-Times Run: 1
-Executions With Error: 0
-Invalid Executions: 0
-
-
-----------------------
-Showing results for: /tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/test/Scrutor.Tests/Scrutor.Tests.csproj
-----------------------
----------------------------
-Target Versions:
----------------------------
-net8.0
----------------------------
-Source Versions:
----------------------------
-net48
----------------------------
-Upgrade packages:
----------------------------
-xunit,->2.4.2
-xunit.runner.visualstudio,->2.5.3
----------------------------
-Action packages:
----------------------------
----------------------------
-Executed Actions for file: Project
----------------------------
-
-Action Type: ProjectFile
-Action Name: MigrateProjectFile
-Action Value: 
-Times Run: 1
-Executions With Error: 0
-Invalid Executions: 0
-
-
-----------------------
-Showing results for: /tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/src/Scrutor/Scrutor.csproj
-----------------------
----------------------------
-Target Versions:
----------------------------
-net8.0
----------------------------
-Source Versions:
----------------------------
-net48
----------------------------
-Upgrade packages:
----------------------------
----------------------------
-Action packages:
----------------------------
----------------------------
-Executed Actions for file: Project
----------------------------
-
-Action Type: ProjectFile
-Action Name: MigrateProjectFile
-Action Value: 
-Times Run: 1
-Executions With Error: 0
-Invalid Executions: 0
-
 
 
 ===========
