@@ -1,0 +1,68 @@
+==========
+References
+==========
+Scrutor.Tests
+Xunit
+Microsoft.Extensions.DependencyInjection
+
+System.Linq
+System
+Scrutor
+System.Collections.Generic
+Scrutor.Tests.ChildNamespace
+System.Runtime.CompilerServices
+UnwantedNamespace
+<global namespace>
+Microsoft.VisualStudio.TestPlatform
+project.all
+
+===============
+DownloadedFiles
+===============
+project.all.json
+
+==============
+ProjectResults
+==============
+----------------------
+Showing results for: /tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/test/Scrutor.Tests/Scrutor.Tests.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+----------------------
+Showing results for: /tmp/tempfspartition/QnetTransformArtifacts/MidTransformCode/sourceCode/test/Scrutor.Tests/Scrutor.Tests.csproj
+----------------------
+---------------------------
+Target Versions:
+---------------------------
+net8.0
+---------------------------
+Source Versions:
+---------------------------
+net48
+---------------------------
+Upgrade packages:
+---------------------------
+---------------------------
+Action packages:
+---------------------------
+
+
+===========
+BuildErrors
+===========
+
+
