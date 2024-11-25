@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
+using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -88,9 +89,12 @@ public static partial class ServiceCollectionExtensions
     /// <paramref name="serviceType"/> or <paramref name="decoratorType"/> arguments are <c>null</c>.</exception>
     public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        Preconditions.NotNull(services, nameof(services));
-        Preconditions.NotNull(serviceType, nameof(serviceType));
-        Preconditions.NotNull(decoratorType, nameof(decoratorType));
+        if (services == null)
+            throw new ArgumentNullException(nameof(services));
+        if (serviceType == null)
+            throw new ArgumentNullException(nameof(serviceType));
+        if (decoratorType == null)
+            throw new ArgumentNullException(nameof(decoratorType));
 
         return services.TryDecorate(DecorationStrategy.WithType(serviceType, decoratorType));
     }
