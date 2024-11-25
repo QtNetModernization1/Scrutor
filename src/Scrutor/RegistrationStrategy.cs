@@ -54,7 +54,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is System.Collections.Generic.ICollection<ServiceDescriptor> collection)
+            if (services is ICollection<ServiceDescriptor> collection)
             {
                 collection.Add(descriptor);
             }
