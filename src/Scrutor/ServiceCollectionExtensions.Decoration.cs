@@ -300,9 +300,4 @@ continue; // Unable to decorate using the specified strategy.
         return decorated;
     }
 
-    // Helper method to ensure System.Collections.Generic.IList<T> is recognized
-    private static void EnsureIListIsRecognized<T>()
-    {
-        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
-    }
 }
