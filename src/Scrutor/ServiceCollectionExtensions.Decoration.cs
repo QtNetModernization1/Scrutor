@@ -86,13 +86,13 @@ public static partial class ServiceCollectionExtensions
     /// <param name="decoratorType">The type to decorate existing services with.</param>
     /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>,
     /// <paramref name="serviceType"/> or <paramref name="decoratorType"/> arguments are <c>null</c>.</exception>
-    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    public static bool TryDecorate(this ICollection<ServiceDescriptor> services, Type serviceType, Type decoratorType)
     {
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(serviceType, nameof(serviceType));
         Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
-        return services.TryDecorate(DecorationStrategy.WithType(serviceType, decoratorType));
+        return (services as IServiceCollection)?.TryDecorate(DecorationStrategy.WithType(serviceType, decoratorType)) ?? false;
     }
     
     /// <summary>
