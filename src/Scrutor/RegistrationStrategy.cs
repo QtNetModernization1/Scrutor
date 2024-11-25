@@ -45,16 +45,14 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
+    public abstract void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
+        public override void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
     }
 
-    private interface IServiceCollection : IList<ServiceDescriptor>
-    {
-    }
+    // Removed private IServiceCollection interface
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
@@ -68,7 +66,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services.HasRegistration(descriptor.ServiceType))
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
