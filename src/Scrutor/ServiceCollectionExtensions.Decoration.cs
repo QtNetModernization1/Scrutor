@@ -1,6 +1,7 @@
 using Scrutor;
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -17,7 +18,7 @@ public static partial class ServiceCollectionExtensions
     /// <param name="services">The services to add to.</param>
     /// <exception cref="DecorationException">If no service of the type <typeparamref name="TService"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static IEnumerable Decorate<TService, TDecorator>(this IEnumerable services)
+    public static IEnumerable<ServiceDescriptor> Decorate<TService, TDecorator>(this IEnumerable<ServiceDescriptor> services)
         where TDecorator : TService
     {
         if (services == null)
@@ -26,7 +27,7 @@ public static partial class ServiceCollectionExtensions
         return DecorateInternal(services, typeof(TService), typeof(TDecorator));
     }
 
-    private static IEnumerable DecorateInternal(IEnumerable services, Type serviceType, Type decoratorType)
+    private static IEnumerable<ServiceDescriptor> DecorateInternal(IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
     {
         // Implementation details...
         return services;
