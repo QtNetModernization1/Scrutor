@@ -79,6 +79,18 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        {
+            if (services is IServiceCollection serviceCollection)
+            {
+                serviceCollection.Add(descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an IServiceCollection", nameof(services));
+            }
+        }
+
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             services.Add(descriptor);
