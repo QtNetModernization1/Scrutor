@@ -46,7 +46,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return services.TryDecorate(typeof(TService), typeof(TDecorator));
+        return TryDecorateInternal(services, typeof(TService), typeof(TDecorator));
     }
 
     // Overload to handle IList<ServiceDescriptor> explicitly
@@ -55,7 +55,17 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
+        return TryDecorateInternal(services, typeof(TService), typeof(TDecorator));
+    }
+
+    private static bool TryDecorateInternal(IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
+    {
+        if (services is IServiceCollection serviceCollection)
+        {
+            return serviceCollection.TryDecorate(serviceType, decoratorType);
+        }
+        // If it's not an IServiceCollection, we can't decorate it
+        return false;
     }
 
     // Helper method to ensure IServiceCollection is recognized
