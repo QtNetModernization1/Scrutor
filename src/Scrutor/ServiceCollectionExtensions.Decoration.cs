@@ -13,6 +13,28 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
+    // Overload to handle IList<ServiceDescriptor> explicitly
+    public static bool TryDecorate<TService, TDecorator>(this IList<ServiceDescriptor> services)
+        where TDecorator : TService
+    {
+        Preconditions.NotNull(services, nameof(services));
+
+        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
+    }
+
+    // Helper method to ensure IServiceCollection is recognized
+    private static void EnsureIServiceCollectionIsRecognized(IServiceCollection services)
+    {
+        // This method is just to force the compiler to recognize IServiceCollection
+        // It will never be called
+        var temp = services as IEnumerable<ServiceDescriptor>;
+    }
+
+    // Helper method to ensure System.Collections.Generic.IList<T> is recognized
+    private static void EnsureIListIsRecognized<T>()
+    {
+        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
+    }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
 /// using the specified type <typeparamref name="TDecorator"/>.
