@@ -14,6 +14,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
+    // Explicitly declare IList<T> to ensure it's recognized
+    private static System.Collections.Generic.IList<T> GetList<T>() => new System.Collections.Generic.List<T>();
     // Overload to handle IServiceCollection explicitly
     public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
@@ -75,6 +77,12 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
         return services.Decorate(DecorationStrategy.WithType(serviceType, decoratorType));
+    }
+
+    // Helper method to ensure IList<T> is recognized
+    private static void EnsureIListIsRecognized<T>()
+    {
+        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
     }
 
     /// <summary>
