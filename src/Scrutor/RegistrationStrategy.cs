@@ -41,7 +41,7 @@ public abstract class RegistrationStrategy
     }
 
     /// <summary>
-    /// Applies the the <see cref="ServiceDescriptor"/> to the <see cref="IServiceCollection"/>.
+    /// Applies the <see cref="ServiceDescriptor"/> to the <see cref="IServiceCollection"/>.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
@@ -64,7 +64,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services.HasRegistration(descriptor.ServiceType))
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
@@ -93,24 +93,12 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                for (var i = services.Count - 1; i >= 0; i--)
-                {
-                    if (services[i].ServiceType == descriptor.ServiceType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                for (var i = services.Count - 1; i >= 0; i--)
-                {
-                    if (services[i].ImplementationType == descriptor.ImplementationType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
             services.Add(descriptor);
