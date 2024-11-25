@@ -47,6 +47,12 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return this;
     }
 
+    public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
+    {
+        Inner.PropagateLifetime(lifetime);
+        return this;
+    }
+
     #region Chain Methods
 
     public IImplementationTypeSelector FromCallingAssembly()
