@@ -52,7 +52,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
@@ -60,7 +60,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
@@ -68,12 +68,12 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
@@ -105,7 +105,7 @@ public abstract class RegistrationStrategy
                 services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 }
