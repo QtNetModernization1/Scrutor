@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace Scrutor;
 
+// Ensure IEnumerable is explicitly referenced
+using IEnumerableOfServiceDescriptor = System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
+
 public abstract class RegistrationStrategy
 {
     /// <summary>
@@ -18,7 +21,7 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IList<ServiceDescriptor> services, ServiceDescriptor descriptor);
+    public abstract void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor);
 
     /// <summary>
     /// Appends a new registration for existing services.
@@ -56,7 +59,7 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
             if (services is IServiceCollection serviceCollection)
             {
@@ -76,7 +79,7 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
             if (services is IServiceCollection serviceCollection)
             {
@@ -96,7 +99,7 @@ public abstract class RegistrationStrategy
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
             if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
@@ -133,7 +136,7 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
             if (services is IServiceCollection serviceCollection)
             {
