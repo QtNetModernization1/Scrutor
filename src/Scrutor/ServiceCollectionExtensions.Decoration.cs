@@ -14,6 +14,11 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
+    // Ensure ICollection<> is recognized
+    private static void EnsureICollectionIsRecognized<T>()
+    {
+        System.Collections.Generic.ICollection<T> collection = new System.Collections.Generic.List<T>();
+    }
     // Overload to handle IServiceCollection explicitly
     public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
