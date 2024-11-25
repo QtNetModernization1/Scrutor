@@ -5,6 +5,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
+#if NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER
+using System.Collections.Generic;
+#endif
+
 namespace Scrutor;
 
 public abstract class RegistrationStrategy
