@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using System.Collections.Generic;
 
 namespace Scrutor;
@@ -54,9 +55,9 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is ICollection<ServiceDescriptor> collection)
+            if (services is IList<ServiceDescriptor> list)
             {
-                collection.Add(descriptor);
+                list.Add(descriptor);
             }
             else
             {
