@@ -46,7 +46,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return TryDecorateInternal(services, typeof(TService), typeof(TDecorator));
+        return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Overload to handle IList<ServiceDescriptor> explicitly
@@ -55,30 +55,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return TryDecorateInternal(services, typeof(TService), typeof(TDecorator));
-    }
-
-    private static bool TryDecorateInternal(IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
-    {
-        if (services is IServiceCollection serviceCollection)
-        {
-            return serviceCollection.TryDecorate(serviceType, decoratorType);
-        }
-        else if (services is IList<ServiceDescriptor> serviceList)
-        {
-            return ((IServiceCollection)serviceList).TryDecorate(serviceType, decoratorType);
-        }
-        return false;
-    }
-
-    // Add this method to handle the TryDecorate call for IServiceCollection
-    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
-    {
-        Preconditions.NotNull(services, nameof(services));
-        Preconditions.NotNull(serviceType, nameof(serviceType));
-        Preconditions.NotNull(decoratorType, nameof(decoratorType));
-
-        return services.TryDecorate(DecorationStrategy.WithType(serviceType, decoratorType));
+        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
