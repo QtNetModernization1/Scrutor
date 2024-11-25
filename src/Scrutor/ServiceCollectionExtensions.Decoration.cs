@@ -26,11 +26,26 @@ public static partial class ServiceCollectionExtensions
 
     private static bool TryDecorateInternal(IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        if (services is ICollection<ServiceDescriptor> collection)
+        // Use LINQ to check if any service was decorated
+        return services.Any(descriptor =>
         {
-            return collection.TryDecorate(serviceType, decoratorType);
-        }
-        return false;
+            if (descriptor.ServiceType == serviceType)
+            {
+                var decoratedDescriptor = new ServiceDescriptor(
+                    serviceType,
+                    sp =>
+                    {
+                        var original = sp.GetRequiredService(serviceType);
+                        return Activator.CreateInstance(decoratorType, original);
+                    },
+                    descriptor.Lifetime);
+
+                services.Remove(descriptor);
+                services.Add(decoratedDescriptor);
+                return true;
+            }
+            return false;
+        });
     }
 
     // Helper method to ensure IServiceCollection is recognized
