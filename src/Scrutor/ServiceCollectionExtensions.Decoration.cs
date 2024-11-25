@@ -1,5 +1,6 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -22,6 +23,9 @@ public static partial class ServiceCollectionExtensions
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
     }
+
+    // Helper method to ensure IEnumerable<T> is recognized
+    private static IEnumerable<T> AsEnumerable<T>(this IEnumerable<T> source) => source;
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
