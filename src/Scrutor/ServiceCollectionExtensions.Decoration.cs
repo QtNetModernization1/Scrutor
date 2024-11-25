@@ -1,6 +1,7 @@
 using Scrutor;
 using System;
 using System.Collections.Generic;
+using System.Collections;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,6 +11,8 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
+    // Ensure IServiceCollection is recognized as IList<ServiceDescriptor>
+    private static IList<ServiceDescriptor> AsList(this IServiceCollection services) => services as IList<ServiceDescriptor> ?? new List<ServiceDescriptor>(services);
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
     /// using the specified type <typeparamref name="TDecorator"/>.
@@ -22,7 +25,8 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return services.Decorate(typeof(TService), typeof(TDecorator));
+        var servicesList = services.AsList();
+        return servicesList.Decorate(typeof(TService), typeof(TDecorator)) as IServiceCollection ?? services;
     }
 
     /// <summary>
@@ -63,7 +67,7 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services as ICollection<ServiceDescriptor>;
+        var temp = services.AsList();
     }
 
     /// <summary>
