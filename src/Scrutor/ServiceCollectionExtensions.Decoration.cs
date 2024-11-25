@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
-using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -298,6 +297,6 @@ continue; // Unable to decorate using the specified strategy.
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
     private static void EnsureIListIsRecognized<T>()
     {
-        IList<T> list = new List<T>();
+        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
     }
 }
