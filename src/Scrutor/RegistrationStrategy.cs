@@ -6,10 +6,6 @@ using System.Linq;
 
 namespace Scrutor;
 
-// Ensure IEnumerable and IList are explicitly referenced
-using IEnumerableOfServiceDescriptor = System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
-using IListOfServiceDescriptor = System.Collections.Generic.IList<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
-
 public abstract class RegistrationStrategy
 {
     /// <summary>
@@ -55,7 +51,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            services.TryAdd(descriptor);
+            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
         }
     }
 
