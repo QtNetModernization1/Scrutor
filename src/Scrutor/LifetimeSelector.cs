@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,11 +38,11 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
+    public IImplementationTypeSelector WithLifetime<TEnum>(TEnum lifetime) where TEnum : struct, Enum
     {
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
-        Inner.PropagateLifetime(lifetime);
+        Inner.PropagateLifetime((ServiceLifetime)(object)lifetime);
 
         return this;
     }
