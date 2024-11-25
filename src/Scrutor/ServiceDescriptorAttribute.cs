@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
+#if NETSTANDARD2_0
+using System.Reflection;
+#endif
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
