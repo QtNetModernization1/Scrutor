@@ -71,13 +71,7 @@ public static partial class ServiceCollectionExtensions
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
-    // Removed duplicate method EnsureIServiceCollectionIsRecognized
-
-    // Helper method to ensure System.Collections.Generic.IList<T> is recognized
-    private static void EnsureIListIsRecognized<T>()
-    {
-        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
-    }
+    // Removed duplicate methods
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
