@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
 using System.Collections.ObjectModel;
-using System.Collections;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -32,12 +31,6 @@ public static partial class ServiceCollectionExtensions
             return collection.TryDecorate(serviceType, decoratorType);
         }
         return false;
-    }
-
-    // Helper method to ensure ICollection<T> is recognized
-    private static void EnsureICollectionIsRecognized<T>()
-    {
-        ICollection<T> collection = new List<T>();
     }
 
     // Helper method to ensure IServiceCollection is recognized
