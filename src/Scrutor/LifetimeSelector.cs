@@ -4,7 +4,6 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 
 namespace Scrutor;
 
@@ -40,7 +39,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime<TEnum>(TEnum lifetime) where TEnum : struct
+    public IImplementationTypeSelector WithLifetime<TEnum>(TEnum lifetime) where TEnum : struct, Enum
     {
         if (!typeof(TEnum).IsEnum)
         {
@@ -49,7 +48,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
-        Inner.PropagateLifetime((ServiceLifetime)Enum.ToObject(typeof(ServiceLifetime), Unsafe.As<TEnum, int>(ref lifetime)));
+        Inner.PropagateLifetime((ServiceLifetime)Enum.ToObject(typeof(ServiceLifetime), Convert.ToInt32(lifetime)));
 
         return this;
     }
