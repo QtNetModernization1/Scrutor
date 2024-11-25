@@ -59,12 +59,7 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
-        {
-            services.TryAdd(descriptor);
-        }
-
-        public void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
             if (services is IServiceCollection serviceCollection)
             {
