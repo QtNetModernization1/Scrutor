@@ -26,7 +26,7 @@ public static partial class ServiceCollectionExtensions
 
     private static bool TryDecorateInternal(IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        if (services is ICollection<ServiceDescriptor> collection)
+        if (services is System.Collections.Generic.ICollection<ServiceDescriptor> collection)
         {
             return collection.TryDecorate(serviceType, decoratorType);
         }
