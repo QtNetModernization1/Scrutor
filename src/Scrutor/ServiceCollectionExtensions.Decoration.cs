@@ -49,13 +49,13 @@ public static partial class ServiceCollectionExtensions
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
-    // Overload to handle IServiceCollection explicitly
-    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
+    // Overload to handle IList<ServiceDescriptor> explicitly
+    public static bool TryDecorate<TService, TDecorator>(this IList<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return services.TryDecorate(typeof(TService), typeof(TDecorator));
+        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
