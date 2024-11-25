@@ -26,7 +26,7 @@ public static partial class ServiceCollectionExtensions
 
     private static bool TryDecorateInternal(IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        System.Collections.Generic.List<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> servicesList = services.ToList();
+        var servicesList = services.ToList();
         return servicesList.TryDecorate(serviceType, decoratorType);
     }
 
