@@ -1,12 +1,11 @@
-using Scrutor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using GenericCollections = System.Collections.Generic;
+using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System.Linq;
+using Scrutor;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -34,7 +33,7 @@ public static partial class ServiceCollectionExtensions
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
     private static void EnsureIListIsRecognized<T>()
     {
-        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
+        IList<T> list = new List<T>();
     }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
