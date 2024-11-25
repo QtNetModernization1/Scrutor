@@ -28,7 +28,7 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services as System.Collections.Generic.IEnumerable<ServiceDescriptor>;
+        var temp = services as IEnumerable<ServiceDescriptor>;
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
@@ -43,7 +43,7 @@ public static partial class ServiceCollectionExtensions
     /// <param name="services">The services to add to.</param>
     /// <exception cref="DecorationException">If no service of the type <typeparamref name="TService"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static System.Collections.Generic.IEnumerable<ServiceDescriptor> Decorate<TService, TDecorator>(this System.Collections.Generic.IEnumerable<ServiceDescriptor> services)
+    public static IEnumerable<ServiceDescriptor> Decorate<TService, TDecorator>(this IEnumerable<ServiceDescriptor> services)
         where TDecorator : TService
     {
         if (services == null)
