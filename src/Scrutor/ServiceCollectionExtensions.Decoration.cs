@@ -13,6 +13,45 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
+    // Add this helper method to work with IList<ServiceDescriptor>
+    private static bool TryDecorateList(IList<ServiceDescriptor> services, Type serviceType, Type decoratorType)
+    {
+        bool decorated = false;
+        for (int i = services.Count - 1; i >= 0; i--)
+        {
+            ServiceDescriptor descriptor = services[i];
+            if (descriptor.ServiceType == serviceType)
+            {
+                var decoratedDescriptor = new ServiceDescriptor(
+                    serviceType,
+                    sp =>
+                    {
+                        var innerService = sp.CreateInstance(descriptor);
+                        return sp.CreateInstance(decoratorType, innerService);
+                    },
+                    descriptor.Lifetime);
+                services[i] = decoratedDescriptor;
+                decorated = true;
+            }
+        }
+        return decorated;
+    }
+
+    private static object CreateInstance(this IServiceProvider sp, ServiceDescriptor descriptor)
+    {
+        if (descriptor.ImplementationInstance != null)
+            return descriptor.ImplementationInstance;
+
+        if (descriptor.ImplementationFactory != null)
+            return descriptor.ImplementationFactory(sp);
+
+        return sp.GetRequiredService(descriptor.ImplementationType);
+    }
+
+    private static object CreateInstance(this IServiceProvider sp, Type type, params object[] parameters)
+    {
+        return ActivatorUtilities.CreateInstance(sp, type, parameters);
+    }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
 /// using the specified type <typeparamref name="TDecorator"/>.
@@ -55,7 +94,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
+        return TryDecorateList(services, typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
@@ -63,7 +102,7 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services as ICollection<ServiceDescriptor>;
+        var temp = services as IEnumerable<ServiceDescriptor>;
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
