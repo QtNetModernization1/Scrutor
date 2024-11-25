@@ -46,7 +46,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return services.TryDecorate(typeof(TService), typeof(TDecorator));
+        return ((IEnumerable<ServiceDescriptor>)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Overload to handle IList<ServiceDescriptor> explicitly
