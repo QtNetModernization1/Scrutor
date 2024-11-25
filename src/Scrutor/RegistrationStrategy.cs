@@ -23,7 +23,7 @@ public abstract class RegistrationStrategy
     public static readonly RegistrationStrategy Throw = new ThrowRegistrationStrategy();
 
     /// <summary>
-    /// Replaces existing service registrations using <see cref="ReplacementBehavior.Default"/>.
+/// Replaces existing service registrations using <see cref="ReplacementBehavior.Default"/>.
     /// </summary>
     public static RegistrationStrategy Replace()
     {
@@ -55,14 +55,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is ICollection<ServiceDescriptor> collection)
-            {
-                collection.Add(descriptor);
-            }
-            else
-            {
-                services.Add(descriptor);
-            }
+            services.Add(descriptor);
         }
     }
 
