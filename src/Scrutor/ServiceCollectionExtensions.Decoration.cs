@@ -7,7 +7,6 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
-using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -51,12 +50,6 @@ public static partial class ServiceCollectionExtensions
             throw new ArgumentNullException(nameof(services));
 
         return DecorateInternal(services, typeof(TService), typeof(TDecorator));
-    }
-
-    // Helper method to ensure IEnumerable<T> is recognized
-    private static void EnsureIEnumerableIsRecognized<T>()
-    {
-        IEnumerable<T> enumerable = new List<T>();
     }
 
     private static IEnumerable<ServiceDescriptor> DecorateInternal(IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
