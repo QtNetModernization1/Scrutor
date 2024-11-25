@@ -52,10 +52,6 @@ public abstract class RegistrationStrategy
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
     }
 
-    private interface IServiceCollection : IList<ServiceDescriptor>
-    {
-    }
-
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
