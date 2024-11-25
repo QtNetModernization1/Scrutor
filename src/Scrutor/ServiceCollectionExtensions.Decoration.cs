@@ -1,6 +1,8 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -54,6 +56,14 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
         return services.Decorate(DecorationStrategy.WithType(serviceType, decoratorType));
+    }
+
+    // Helper method to ensure IServiceCollection is recognized
+    private static void EnsureIServiceCollectionIsRecognized(IServiceCollection services)
+    {
+        // This method is just to force the compiler to recognize IServiceCollection
+        // It will never be called
+        var temp = services as ICollection<ServiceDescriptor>;
     }
 
     /// <summary>
