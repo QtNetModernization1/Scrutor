@@ -7,6 +7,8 @@ using System.Linq;
 
 namespace Scrutor;
 
+using System;
+
 internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 {
     public LifetimeSelector(ServiceTypeSelector inner, IEnumerable<TypeMap> typeMaps, IEnumerable<TypeFactoryMap> typeFactoryMaps)
@@ -39,7 +41,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime<TEnum>(TEnum lifetime) where TEnum : struct, Enum
+    public IImplementationTypeSelector WithLifetime<TEnum>(TEnum lifetime) where TEnum : struct, System.Enum
     {
         if (!typeof(TEnum).IsEnum)
         {
