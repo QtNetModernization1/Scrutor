@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
 using System.Collections.ObjectModel;
-using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -27,18 +26,11 @@ public static partial class ServiceCollectionExtensions
 
     private static bool TryDecorateInternal(IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        if (services is GenericCollections.ICollection<ServiceDescriptor> collection)
+        if (services is ICollection<ServiceDescriptor> collection)
         {
             return collection.TryDecorate(serviceType, decoratorType);
         }
         return false;
-    }
-
-    [MethodImpl(MethodImplOptions.NoInlining)]
-    private static void EnsureGenericCollectionsAreRecognized()
-    {
-        _ = new GenericCollections.List<object>();
-        _ = new GenericCollections.Dictionary<object, object>();
     }
 
     // Helper method to ensure IServiceCollection is recognized
