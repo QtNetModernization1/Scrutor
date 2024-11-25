@@ -48,7 +48,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
-        Inner.PropagateLifetime((ServiceLifetime)(object)lifetime);
+        Inner.PropagateLifetime((ServiceLifetime)Enum.ToObject(typeof(ServiceLifetime), Convert.ToInt32(lifetime)));
 
         return this;
     }
