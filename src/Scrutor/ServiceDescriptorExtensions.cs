@@ -10,9 +10,12 @@ internal static class ServiceDescriptorExtensions
 
     public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType) => descriptor switch
     {
-        { ImplementationType: not null } => new ServiceDescriptor(serviceType, descriptor.ImplementationType, descriptor.Lifetime),
-        { ImplementationFactory: not null } => new ServiceDescriptor(serviceType, sp => descriptor.ImplementationFactory!(sp), descriptor.Lifetime),
-        { ImplementationInstance: not null } => new ServiceDescriptor(serviceType, descriptor.ImplementationInstance),
+        { ImplementationType: Type implementationType } when implementationType != null =>
+            new ServiceDescriptor(serviceType, implementationType, descriptor.Lifetime),
+        { ImplementationFactory: Func<IServiceProvider, object> factory } when factory != null =>
+            new ServiceDescriptor(serviceType, sp => factory(sp), descriptor.Lifetime),
+        { ImplementationInstance: object instance } when instance != null =>
+            new ServiceDescriptor(serviceType, instance),
         _ => throw new ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor))
     };
 }
