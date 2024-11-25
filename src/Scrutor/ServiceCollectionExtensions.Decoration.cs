@@ -7,6 +7,7 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
+using System.Collections.ObjectModel;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return services.TryDecorate(typeof(TService), typeof(TDecorator));
+        return ((ICollection<ServiceDescriptor>)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
