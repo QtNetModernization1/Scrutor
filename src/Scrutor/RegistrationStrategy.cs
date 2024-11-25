@@ -6,12 +6,22 @@ using System.Linq;
 
 namespace Scrutor;
 
+// Ensure IEnumerable is explicitly referenced
+using IEnumerableOfServiceDescriptor = System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
+
 public abstract class RegistrationStrategy
 {
     /// <summary>
     /// Skips registrations for services that already exists.
     /// </summary>
     public static readonly RegistrationStrategy Skip = new SkipRegistrationStrategy();
+
+    /// <summary>
+    /// Applies the ServiceDescriptor to the IServiceCollection.
+    /// </summary>
+    /// <param name="services">The service collection.</param>
+    /// <param name="descriptor">The descriptor to apply.</param>
+    public abstract void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor);
 
     /// <summary>
     /// Appends a new registration for existing services.
@@ -49,7 +59,17 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        {
+            if (services is IServiceCollection serviceCollection)
+            {
+                serviceCollection.TryAdd(descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an IServiceCollection", nameof(services));
+            }
+        }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
