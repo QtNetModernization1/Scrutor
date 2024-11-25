@@ -5,9 +5,6 @@ using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 
-// Explicitly adding System namespace
-using System;
-
 namespace Scrutor;
 
 internal class ServiceTypeSelector : IServiceTypeSelector, ISelector
