@@ -26,7 +26,11 @@ public static partial class ServiceCollectionExtensions
 
     private static bool TryDecorateInternal(IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        return services.TryDecorate(serviceType, decoratorType);
+        if (services is ICollection<ServiceDescriptor> collection)
+        {
+            return collection.TryDecorate(serviceType, decoratorType);
+        }
+        return false;
     }
 
     // Helper method to ensure IServiceCollection is recognized
