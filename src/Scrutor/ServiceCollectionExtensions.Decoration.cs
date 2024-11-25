@@ -37,15 +37,14 @@ public static partial class ServiceCollectionExtensions
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-/// using the specified type <typeparamref name="TDecorator"/>.
+    /// using the specified type <typeparamref name="TDecorator"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
     public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        if (services == null)
-            throw new ArgumentNullException(nameof(services));
+        Preconditions.NotNull(services, nameof(services));
 
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
@@ -62,12 +61,6 @@ public static partial class ServiceCollectionExtensions
     private static void EnsureIListIsRecognized<T>()
     {
         System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
-    }
-
-    // Helper method to ensure ICollection<T> is recognized
-    private static void EnsureICollectionIsRecognized<T>()
-    {
-        ICollection<T> collection = new List<T>();
     }
 
     /// <summary>
