@@ -37,7 +37,7 @@ public static partial class ServiceCollectionExtensions
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-/// using the specified type <typeparamref name="TDecorator"/>.
+    /// using the specified type <typeparamref name="TDecorator"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
@@ -46,7 +46,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return TryDecorateInternal(services, typeof(TService), typeof(TDecorator));
+        return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Overload to handle IList<ServiceDescriptor> explicitly
@@ -55,16 +55,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return TryDecorateInternal(services, typeof(TService), typeof(TDecorator));
-    }
-
-    private static bool TryDecorateInternal(IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
-    {
-        if (services is IServiceCollection serviceCollection)
-        {
-            return serviceCollection.TryDecorate(serviceType, decoratorType);
-        }
-        return false;
+        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
