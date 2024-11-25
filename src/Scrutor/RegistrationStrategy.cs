@@ -45,14 +45,16 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor);
+    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
     }
 
-    // Removed private IServiceCollection interface
+    private interface IServiceCollection : IList<ServiceDescriptor>
+    {
+    }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
