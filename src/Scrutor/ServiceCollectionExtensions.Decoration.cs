@@ -46,12 +46,6 @@ public static partial class ServiceCollectionExtensions
     {
         System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
     }
-
-    // Helper method to ensure IList<> is recognized
-    private static void EnsureIListIsRecognized()
-    {
-        System.Collections.Generic.IList<object> list = new System.Collections.Generic.List<object>();
-    }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
 /// using the specified type <typeparamref name="TDecorator"/>.
