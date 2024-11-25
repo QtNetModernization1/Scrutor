@@ -26,11 +26,8 @@ public static partial class ServiceCollectionExtensions
 
     private static bool TryDecorateInternal(IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        if (services is ICollection<ServiceDescriptor> collection)
-        {
-            return collection.TryDecorate(serviceType, decoratorType);
-        }
-        return false;
+        var servicesList = services.ToList();
+        return servicesList.TryDecorate(serviceType, decoratorType);
     }
 
     // Helper method to ensure IServiceCollection is recognized
@@ -38,7 +35,7 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services as System.Collections.Generic.IEnumerable<ServiceDescriptor>;
+        var temp = services.ToList();
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
