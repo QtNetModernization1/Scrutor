@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -63,7 +64,7 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services as ICollection<ServiceDescriptor>;
+        var temp = services as IList<ServiceDescriptor>;
     }
 
     /// <summary>
