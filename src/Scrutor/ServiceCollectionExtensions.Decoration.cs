@@ -6,7 +6,6 @@ using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
-using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -51,7 +50,7 @@ public static partial class ServiceCollectionExtensions
     }
 
     // Overload to handle IList<ServiceDescriptor> explicitly
-    public static bool TryDecorate<TService, TDecorator>(this System.Collections.Generic.IList<ServiceDescriptor> services)
+    public static bool TryDecorate<TService, TDecorator>(this IList<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
