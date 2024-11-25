@@ -12,41 +12,17 @@ public static partial class ServiceCollectionExtensions
 {
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-/// using the specified type <typeparamref name="TDecorator"/>.
+    /// using the specified type <typeparamref name="TDecorator"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="DecorationException">If no service of the type <typeparamref name="TService"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static System.Collections.Generic.IEnumerable<ServiceDescriptor> Decorate<TService, TDecorator>(this System.Collections.Generic.IEnumerable<ServiceDescriptor> services)
+    public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        if (services == null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
+        Preconditions.NotNull(services, nameof(services));
 
-        return DecorateInternal(services, typeof(TService), typeof(TDecorator));
-    }
-
-    private static System.Collections.Generic.IEnumerable<ServiceDescriptor> DecorateInternal(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
-    {
-        foreach (var descriptor in services)
-        {
-            if (descriptor.ServiceType == serviceType)
-            {
-                yield return ServiceDescriptor.Describe(
-                    serviceType,
-                    sp => {
-                        var innerService = sp.GetRequiredService(serviceType);
-                        return (TService)ActivatorUtilities.CreateInstance(sp, decoratorType, innerService);
-                    },
-                    descriptor.Lifetime);
-            }
-            else
-            {
-                yield return descriptor;
-            }
-        }
+        return services.Decorate(typeof(TService), typeof(TDecorator));
     }
 
     /// <summary>
