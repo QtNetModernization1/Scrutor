@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,10 +13,10 @@ public class ServiceDescriptorAttribute : Attribute
 
     public ServiceDescriptorAttribute(Type? serviceType) : this(serviceType, ServiceLifetime.Transient) { }
 
-    public ServiceDescriptorAttribute(Type? serviceType, ServiceLifetime lifetime)
+    public ServiceDescriptorAttribute(Type? serviceType, System.Enum lifetime)
     {
         ServiceType = serviceType;
-        Lifetime = lifetime;
+        Lifetime = (ServiceLifetime)lifetime;
     }
 
     public Type? ServiceType { get; }
