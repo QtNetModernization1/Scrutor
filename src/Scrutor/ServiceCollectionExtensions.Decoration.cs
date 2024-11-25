@@ -55,7 +55,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
+        return TryDecorate<TService, TDecorator>((IServiceCollection)services);
     }
 
     // Helper method to ensure IServiceCollection is recognized
@@ -63,13 +63,22 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services as ICollection<ServiceDescriptor>;
+        var temp = services as IEnumerable<ServiceDescriptor>;
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
     private static void EnsureIListIsRecognized<T>()
     {
         System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
+    }
+
+    // Add this method to handle IServiceCollection directly
+    private static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
+        where TDecorator : TService
+    {
+        Preconditions.NotNull(services, nameof(services));
+
+        return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     /// <summary>
