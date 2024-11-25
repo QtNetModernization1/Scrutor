@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Abstractions;
-using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -47,12 +46,6 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(services, nameof(services));
 
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
-    }
-
-    // Helper method to ensure IList<> is recognized
-    private static void EnsureIListIsRecognized<T>()
-    {
-        IList<T> list = new List<T>();
     }
 
     // Helper method to ensure IServiceCollection is recognized
