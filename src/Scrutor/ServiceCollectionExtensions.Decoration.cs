@@ -11,6 +11,9 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+// Ensure ICollection<> is recognized
+using System.Collections.Generic;
+
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
