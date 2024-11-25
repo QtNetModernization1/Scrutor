@@ -7,9 +7,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
 
-// Explicitly add System.Collections.Generic to ensure IEnumerable<> is recognized
-using System.Collections.Generic;
-
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -47,8 +44,7 @@ public static partial class ServiceCollectionExtensions
     public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        if (services == null)
-            throw new ArgumentNullException(nameof(services));
+        Preconditions.NotNull(services, nameof(services));
 
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
