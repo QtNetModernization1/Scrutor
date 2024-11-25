@@ -50,7 +50,7 @@ public static partial class ServiceCollectionExtensions
     }
 
     // Overload to handle IList<ServiceDescriptor> explicitly
-    public static bool TryDecorate<TService, TDecorator>(this System.Collections.Generic.IList<ServiceDescriptor> services)
+    public static bool TryDecorate<TService, TDecorator>(this IList<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
