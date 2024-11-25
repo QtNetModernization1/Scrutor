@@ -14,13 +14,13 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
-    // Overload to handle IList<ServiceDescriptor> explicitly
-    public static bool TryDecorate<TService, TDecorator>(this GenericCollections.IList<ServiceDescriptor> services)
+    // Overload to handle IServiceCollection explicitly
+    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
+        return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
