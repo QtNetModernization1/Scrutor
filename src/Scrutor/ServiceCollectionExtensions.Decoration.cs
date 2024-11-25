@@ -53,11 +53,12 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
+        var temp = services as ICollection<ServiceDescriptor>;
     }
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
-    /// using the specified <paramref name="decoratorType"/>.
+/// using the specified <paramref name="decoratorType"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <param name="serviceType">The type of services to decorate.</param>
@@ -74,17 +75,9 @@ public static partial class ServiceCollectionExtensions
         return services.Decorate(DecorationStrategy.WithType(serviceType, decoratorType));
     }
 
-    // Helper method to ensure IServiceCollection is recognized
-    private static void EnsureIServiceCollectionIsRecognized(IServiceCollection services)
-    {
-        // This method is just to force the compiler to recognize IServiceCollection
-        // It will never be called
-        var temp = services as ICollection<ServiceDescriptor>;
-    }
-
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
-    /// using the specified <paramref name="decoratorType"/>.
+/// using the specified <paramref name="decoratorType"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <param name="serviceType">The type of services to decorate.</param>
