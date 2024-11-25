@@ -2,12 +2,10 @@ using Scrutor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using GenericCollections = System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
-using System.Collections.ObjectModel;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -34,13 +32,15 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services.ToList();
+        var temp = new List<ServiceDescriptor>(services);
     }
 
-    // Helper method to ensure System.Collections.Generic.IList<T> is recognized
-    private static void EnsureIListIsRecognized<T>()
+    // Helper method to ensure generic collections are recognized
+    private static void EnsureGenericCollectionsAreRecognized<T>()
     {
-        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
+        var list = new List<T>();
+        IEnumerable<T> enumerable = list;
+        ICollection<T> collection = list;
     }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
