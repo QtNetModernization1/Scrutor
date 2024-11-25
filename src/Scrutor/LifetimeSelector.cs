@@ -38,8 +38,13 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime<TEnum>(TEnum lifetime) where TEnum : struct, Enum
+    public IImplementationTypeSelector WithLifetime<TEnum>(TEnum lifetime) where TEnum : struct
     {
+        if (!typeof(TEnum).IsEnum)
+        {
+            throw new ArgumentException("TEnum must be an enumerated type", nameof(TEnum));
+        }
+
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
         Inner.PropagateLifetime((ServiceLifetime)(object)lifetime);
