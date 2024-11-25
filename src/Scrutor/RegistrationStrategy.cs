@@ -50,13 +50,6 @@ public abstract class RegistrationStrategy
         return new ReplaceRegistrationStrategy(behavior);
     }
 
-    /// <summary>
-    /// Applies the <see cref="ServiceDescriptor"/> to the <see cref="IServiceCollection"/>.
-    /// </summary>
-    /// <param name="services">The service collection.</param>
-    /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
-
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
