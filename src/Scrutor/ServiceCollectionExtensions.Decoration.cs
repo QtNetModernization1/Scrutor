@@ -57,6 +57,12 @@ public static partial class ServiceCollectionExtensions
         var temp = services as ICollection<ServiceDescriptor>;
     }
 
+    // Helper method to ensure System.Collections.Generic.IList<T> is recognized
+    private static void EnsureIListIsRecognized<T>()
+    {
+        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
+    }
+
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
 /// using the specified <paramref name="decoratorType"/>.
