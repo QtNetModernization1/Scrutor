@@ -10,6 +10,8 @@ using System.Linq;
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
+using System.Collections.Generic;
+
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
