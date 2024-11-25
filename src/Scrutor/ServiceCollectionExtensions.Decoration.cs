@@ -71,13 +71,7 @@ public static partial class ServiceCollectionExtensions
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
-    // Helper method to ensure IServiceCollection is recognized
-    private static void EnsureIServiceCollectionIsRecognized(IServiceCollection services)
-    {
-        // This method is just to force the compiler to recognize IServiceCollection
-        // It will never be called
-        var temp = services as ICollection<ServiceDescriptor>;
-    }
+    // Removed duplicate method EnsureIServiceCollectionIsRecognized
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
     private static void EnsureIListIsRecognized<T>()
