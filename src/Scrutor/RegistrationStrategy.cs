@@ -136,6 +136,18 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        {
+            if (services is IServiceCollection serviceCollection)
+            {
+                Apply(serviceCollection, descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an IServiceCollection", nameof(services));
+            }
+        }
+
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             var behavior = Behavior;
