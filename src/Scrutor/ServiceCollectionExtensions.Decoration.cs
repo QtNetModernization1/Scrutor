@@ -53,7 +53,7 @@ public static partial class ServiceCollectionExtensions
     /// <param name="services">The services to add to.</param>
     /// <exception cref="DecorationException">If no service of the type <typeparamref name="TService"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static IEnumerable<ServiceDescriptor> Decorate<TService, TDecorator>(this IEnumerable<ServiceDescriptor> services)
+    public static System.Collections.Generic.IEnumerable<ServiceDescriptor> Decorate<TService, TDecorator>(this System.Collections.Generic.IEnumerable<ServiceDescriptor> services)
         where TDecorator : TService
     {
         if (services == null)
@@ -62,7 +62,7 @@ public static partial class ServiceCollectionExtensions
         return DecorateInternal(services, typeof(TService), typeof(TDecorator));
     }
 
-    private static IEnumerable<ServiceDescriptor> DecorateInternal(IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
+    private static System.Collections.Generic.IEnumerable<ServiceDescriptor> DecorateInternal(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, Type serviceType, Type decoratorType)
     {
         // Implementation details...
         return services;
