@@ -1,5 +1,6 @@
 using Scrutor;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,10 @@ public static partial class ServiceCollectionExtensions
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
+
+        // Ensure IList<> is recognized
+        var tempList = new List<object>();
+        IList<object> interfaceList = tempList;
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
     }
