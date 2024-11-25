@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -38,6 +38,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(ServiceLifetime.Transient);
     }
 
+    #nullable disable
     public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
     {
         Preconditions.IsDefined(lifetime, nameof(lifetime));
@@ -46,6 +47,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
         return this;
     }
+    #nullable restore
 
     #region Chain Methods
 
