@@ -50,12 +50,12 @@ public static partial class ServiceCollectionExtensions
     }
 
     // Overload to handle IList<ServiceDescriptor> explicitly
-    public static bool TryDecorate<TService, TDecorator>(this System.Collections.Generic.IList<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services)
+    public static bool TryDecorate<TService, TDecorator>(this IList<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return ((IServiceCollection)(object)services).TryDecorate(typeof(TService), typeof(TDecorator));
+        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
