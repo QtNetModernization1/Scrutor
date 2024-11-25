@@ -70,6 +70,11 @@ public abstract class RegistrationStrategy
                 throw new ArgumentException("Services must be an IServiceCollection", nameof(services));
             }
         }
+
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        {
+            services.TryAdd(descriptor);
+        }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
