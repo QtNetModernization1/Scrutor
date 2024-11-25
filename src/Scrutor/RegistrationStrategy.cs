@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace Scrutor;
 
@@ -51,7 +52,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            services.Add(descriptor);
+            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
         }
     }
 
