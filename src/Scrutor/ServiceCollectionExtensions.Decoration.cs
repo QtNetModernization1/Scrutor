@@ -4,7 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Abstractions;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Linq;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -254,7 +255,7 @@ public static partial class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Decorates all registered services using the specified <paramref name="strategy"/>.
+/// Decorates all registered services using the specified <paramref name="strategy"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <param name="strategy">The strategy for decorating services.</param>
@@ -276,7 +277,7 @@ public static partial class ServiceCollectionExtensions
 
             if (!strategy.CanDecorate(serviceDescriptor.ServiceType))
             {
-                continue; // Unable to decorate using the specified strategy.
+continue; // Unable to decorate using the specified strategy.
             }
 
             var decoratedType = new DecoratedType(serviceDescriptor.ServiceType);
@@ -291,5 +292,11 @@ public static partial class ServiceCollectionExtensions
         }
 
         return decorated;
+    }
+
+    // Helper method to ensure System.Collections.Generic.IList<T> is recognized
+    private static void EnsureIListIsRecognized<T>()
+    {
+        System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
     }
 }
