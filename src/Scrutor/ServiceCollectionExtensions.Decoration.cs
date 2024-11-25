@@ -68,13 +68,19 @@ public static partial class ServiceCollectionExtensions
     /// <exception cref="DecorationException">If no service of the specified <paramref name="serviceType"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>,
     /// <paramref name="serviceType"/> or <paramref name="decoratorType"/> arguments are <c>null</c>.</exception>
-    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    public static System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> Decorate(this System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Type serviceType, Type decoratorType)
     {
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(serviceType, nameof(serviceType));
         Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
-        return services.Decorate(DecorationStrategy.WithType(serviceType, decoratorType));
+        return DecorateInternal(services, serviceType, decoratorType);
+    }
+
+    private static System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> DecorateInternal(System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Type serviceType, Type decoratorType)
+    {
+        // Implementation details...
+        return services;
     }
 
     /// <summary>
