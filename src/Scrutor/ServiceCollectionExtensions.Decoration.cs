@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -24,12 +23,6 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(services, nameof(services));
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
-    }
-
-    // Helper method to ensure IList is recognized
-    private static void EnsureIListIsRecognized()
-    {
-        IList<object> list = new List<object>();
     }
 
     /// <summary>
