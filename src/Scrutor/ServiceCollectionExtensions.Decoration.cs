@@ -20,7 +20,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return (services as IServiceCollection)?.TryDecorate(typeof(TService), typeof(TDecorator)) ?? false;
+        return (services as Microsoft.Extensions.DependencyInjection.IServiceCollection)?.TryDecorate(typeof(TService), typeof(TDecorator)) ?? false;
     }
 
     // Helper method to ensure IServiceCollection is recognized
