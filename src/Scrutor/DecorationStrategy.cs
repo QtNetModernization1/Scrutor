@@ -22,13 +22,13 @@ public abstract class DecorationStrategy
     internal static DecorationStrategy WithFactory(Type serviceType, Func<object, IServiceProvider, object> decoratorFactory) => 
         Create(serviceType, decoratorType: null, decoratorFactory);
     
-    protected static Func<IServiceProvider, object> TypeDecorator(Type serviceType, Type decoratorType) => serviceProvider =>
+    protected static Func<IServiceProvider, System.Object> TypeDecorator(Type serviceType, Type decoratorType) => serviceProvider =>
     {
         var instanceToDecorate = serviceProvider.GetRequiredService(serviceType);
         return ActivatorUtilities.CreateInstance(serviceProvider, decoratorType, instanceToDecorate);
     };
 
-    protected static Func<IServiceProvider, object> FactoryDecorator(Type decorated, Func<object, IServiceProvider, object> decoratorFactory) => serviceProvider =>
+    protected static Func<IServiceProvider, System.Object> FactoryDecorator(Type decorated, Func<System.Object, IServiceProvider, System.Object> decoratorFactory) => serviceProvider =>
     {
         var instanceToDecorate = serviceProvider.GetRequiredService(decorated);
         return decoratorFactory(instanceToDecorate, serviceProvider);
