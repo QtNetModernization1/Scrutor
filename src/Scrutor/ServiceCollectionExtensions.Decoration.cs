@@ -1,6 +1,5 @@
-using Scrutor;
+﻿using Scrutor;
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -55,12 +54,6 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
         return services.Decorate(DecorationStrategy.WithType(serviceType, decoratorType));
-    }
-
-    // Add this helper method to ensure IList<> is recognized
-    private static void EnsureIListIsRecognized<T>()
-    {
-        IList<T> list = new List<T>();
     }
 
     /// <summary>
