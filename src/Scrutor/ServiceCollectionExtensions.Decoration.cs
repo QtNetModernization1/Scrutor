@@ -15,7 +15,7 @@ namespace Microsoft.Extensions.DependencyInjection;
 public static partial class ServiceCollectionExtensions
 {
     // Overload to handle IServiceCollection explicitly
-    public static bool TryDecorate<TService, TDecorator>(this ICollection<ServiceDescriptor> services)
+    public static bool TryDecorate<TService, TDecorator>(this System.Collections.Generic.ICollection<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
