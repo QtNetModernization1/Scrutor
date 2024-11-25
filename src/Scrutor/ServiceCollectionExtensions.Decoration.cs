@@ -28,19 +28,13 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services as System.Collections.Generic.IEnumerable<ServiceDescriptor>;
+        var temp = services as IEnumerable<ServiceDescriptor>;
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
     private static void EnsureIListIsRecognized<T>()
     {
         System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
-    }
-
-    // Additional helper method to ensure IList<T> is recognized
-    private static void EnsureGenericIListIsRecognized<T>()
-    {
-        IList<T> list = new List<T>();
     }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
