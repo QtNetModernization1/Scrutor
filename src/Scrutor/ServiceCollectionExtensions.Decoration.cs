@@ -59,22 +59,6 @@ public static partial class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Decorates all registered services of type <typeparamref name="TService"/>
-    /// using the specified type <typeparamref name="TDecorator"/>.
-    /// </summary>
-    /// <param name="services">The services to add to.</param>
-    /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
-        where TDecorator : TService
-    {
-        Preconditions.NotNull(services, nameof(services));
-
-        return services.TryDecorate(typeof(TService), typeof(TDecorator));
-    }
-
-    // Removed duplicate methods
-
-    /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
 /// using the specified <paramref name="decoratorType"/>.
     /// </summary>
