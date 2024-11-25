@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -49,6 +50,10 @@ public abstract class RegistrationStrategy
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
+    }
+
+    private interface IServiceCollection : IList<ServiceDescriptor>
+    {
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
