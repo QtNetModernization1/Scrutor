@@ -21,7 +21,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return ((System.Collections.Generic.ICollection<ServiceDescriptor>)services).TryDecorate(typeof(TService), typeof(TDecorator));
+        return ((ICollection<ServiceDescriptor>)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     // Helper method to ensure IServiceCollection is recognized
