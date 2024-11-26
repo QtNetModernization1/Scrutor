@@ -58,9 +58,9 @@ protected static void AddServiceDescriptor(ICollectionInterface services, Micros
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(ICollectionInterface services, ServiceDescriptor descriptor)
         {
-            services.Add(descriptor);
+            AddServiceDescriptor(services, descriptor);
         }
     }
 
