@@ -40,11 +40,7 @@ public static partial class ServiceCollectionExtensions
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
     private static void EnsureIListIsRecognized<T>()
     {
-#if NETSTANDARD2_0 || NETCOREAPP3_1 || NET6_0
-        IList<T> list = new List<T>();
-#else
         System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
-#endif
     }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
