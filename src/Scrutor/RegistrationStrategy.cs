@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +24,7 @@ public abstract class RegistrationStrategy
     public static readonly RegistrationStrategy Throw = new ThrowRegistrationStrategy();
 
     /// <summary>
-    /// Replaces existing service registrations using <see cref="ReplacementBehavior.Default"/>.
+/// Replaces existing service registrations using <see cref="ReplacementBehavior.Default"/>.
     /// </summary>
     public static RegistrationStrategy Replace()
     {
