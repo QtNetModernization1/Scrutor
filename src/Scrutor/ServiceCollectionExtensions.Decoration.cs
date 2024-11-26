@@ -34,7 +34,7 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        var temp = services.ToList();
+        var temp = services.ToList<ServiceDescriptor>();
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
