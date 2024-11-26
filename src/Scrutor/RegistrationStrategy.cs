@@ -25,7 +25,7 @@ public abstract class RegistrationStrategy
 
     protected static void AddServiceDescriptor(IServiceCollection services, ServiceDescriptor descriptor)
     {
-        if (services is ICollection<ServiceDescriptor> collection)
+        if (services is System.Collections.Generic.ICollection<ServiceDescriptor> collection)
         {
             collection.Add(descriptor);
         }
