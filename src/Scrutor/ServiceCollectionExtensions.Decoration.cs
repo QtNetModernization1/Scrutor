@@ -20,7 +20,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return services.Decorate(typeof(TService), typeof(TDecorator));
+        return ((IServiceCollection)services).Decorate(typeof(TService), typeof(TDecorator));
     }
 
     /// <summary>
