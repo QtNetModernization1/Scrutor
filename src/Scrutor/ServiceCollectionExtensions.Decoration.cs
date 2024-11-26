@@ -2,7 +2,6 @@ using Scrutor;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using GenericCollections = System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
