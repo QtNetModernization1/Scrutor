@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -60,4 +60,28 @@ public sealed class ServiceDescriptorAttribute<TService> : ServiceDescriptorAttr
     public ServiceDescriptorAttribute() : base(typeof(TService)) { }
 
     public ServiceDescriptorAttribute(ServiceLifetime lifetime) : base(typeof(TService), lifetime) { }
+}
+
+// Extension method to check if a type is based on another type
+internal static class TypeExtensions
+{
+    public static bool IsBasedOn(this Type type, Type baseType)
+    {
+        return baseType.IsAssignableFrom(type);
+    }
+
+    public static IEnumerable<Type> GetBaseTypes(this Type type)
+    {
+        var currentType = type.BaseType;
+        while (currentType != null)
+        {
+            yield return currentType;
+            currentType = currentType.BaseType;
+        }
+    }
+
+    public static string ToFriendlyName(this Type type)
+    {
+        return type.Name;
+    }
 }
