@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,24 +21,24 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     private IEnumerable<TypeFactoryMap> TypeFactoryMaps { get; }
 
-    public ServiceLifetime? Lifetime { get; set; }
+    public Microsoft.Extensions.DependencyInjection.ServiceLifetime? Lifetime { get; set; }
 
     public IImplementationTypeSelector WithSingletonLifetime()
     {
-        return WithLifetime(ServiceLifetime.Singleton);
+        return WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton);
     }
 
     public IImplementationTypeSelector WithScopedLifetime()
     {
-        return WithLifetime(ServiceLifetime.Scoped);
+        return WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped);
     }
 
     public IImplementationTypeSelector WithTransientLifetime()
     {
-        return WithLifetime(ServiceLifetime.Transient);
+        return WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
+    public IImplementationTypeSelector WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
     {
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
