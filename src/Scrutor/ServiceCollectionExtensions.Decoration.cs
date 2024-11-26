@@ -15,11 +15,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
-    // Ensure System.Collections.Generic.IEnumerable<T> is recognized
-    private static void EnsureGenericIEnumerableIsRecognized<T>()
-    {
-        System.Collections.Generic.IEnumerable<T> _ = new System.Collections.Generic.List<T>();
-    }
     // Overload to handle IServiceCollection explicitly
     public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
@@ -39,7 +34,7 @@ public static partial class ServiceCollectionExtensions
     {
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
-        System.Collections.Generic.IEnumerable<ServiceDescriptor> temp = services.ToList();
+        var temp = services.ToList();
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
