@@ -1,5 +1,6 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -10,7 +11,7 @@ public static partial class ServiceCollectionExtensions
 {
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-    /// using the specified type <typeparamref name="TDecorator"/>.
+/// using the specified type <typeparamref name="TDecorator"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="DecorationException">If no service of the type <typeparamref name="TService"/> has been registered.</exception>
@@ -18,7 +19,10 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        Preconditions.NotNull(services, nameof(services));
+        if (services == null)
+        {
+            throw new ArgumentNullException(nameof(services));
+        }
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
     }
