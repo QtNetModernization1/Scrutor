@@ -73,7 +73,7 @@ public abstract class RegistrationStrategy
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+            ((IList<ServiceDescriptor>)services).Add(descriptor);
         }
     }
 
