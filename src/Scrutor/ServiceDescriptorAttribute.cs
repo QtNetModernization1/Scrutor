@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using System.Linq;
 
 namespace Scrutor;
 
@@ -12,7 +11,7 @@ public class ServiceDescriptorAttribute : Attribute
 {
     public ServiceDescriptorAttribute() : this(null) { }
 
-public ServiceDescriptorAttribute(Type? serviceType) : this(serviceType, (ServiceLifetime)Enum.Parse(typeof(ServiceLifetime), nameof(ServiceLifetime.Transient))) { }
+    public ServiceDescriptorAttribute(Type? serviceType) : this(serviceType, ServiceLifetime.Transient) { }
 
     public ServiceDescriptorAttribute(Type? serviceType, ServiceLifetime lifetime)
     {
