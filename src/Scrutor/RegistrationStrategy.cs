@@ -7,8 +7,6 @@ using System.Collections;
 
 namespace Scrutor;
 
-using IServiceDescriptorList = System.Collections.Generic.IList<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
-
 public abstract class RegistrationStrategy
 {
     /// <summary>
