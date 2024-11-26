@@ -21,9 +21,9 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
+    public abstract void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor);
 
-    protected static void AddServiceDescriptor(IServiceCollection services, ServiceDescriptor descriptor)
+    protected static void AddServiceDescriptor(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor)
     {
         services.Add(descriptor);
     }
