@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.InteropServices;
 
 namespace Scrutor;
 
@@ -22,15 +21,7 @@ public class ServiceDescriptorAttribute : Attribute
 
     public Type? ServiceType { get; }
 
-public ServiceLifetime Lifetime { get; }
-
-[Guid("cc7b13ff-cd2d-dd51-0000-000000000001")]
-public enum ServiceLifetimeEnum
-{
-    Singleton = ServiceLifetime.Singleton,
-    Scoped = ServiceLifetime.Scoped,
-    Transient = ServiceLifetime.Transient
-}
+    public ServiceLifetime Lifetime { get; }
 
     public IEnumerable<Type> GetServiceTypes(Type fallbackType)
     {
