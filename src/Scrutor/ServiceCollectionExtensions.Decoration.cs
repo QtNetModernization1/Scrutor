@@ -15,8 +15,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
-    // Explicitly define ICollection<T> to ensure it's recognized
-    private interface IExplicitCollection<T> : ICollection<T> { }
     // Overload to handle IServiceCollection explicitly
     public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
@@ -43,12 +41,6 @@ public static partial class ServiceCollectionExtensions
     private static void EnsureIListIsRecognized<T>()
     {
         System.Collections.Generic.IList<T> list = new System.Collections.Generic.List<T>();
-    }
-
-    // Helper method to ensure ICollection<T> is recognized
-    private static void EnsureICollectionIsRecognized<T>()
-    {
-        IExplicitCollection<T> collection = null;
     }
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
