@@ -57,7 +57,7 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(ICollectionInterface services, ServiceDescriptor descriptor)
+        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             AddServiceDescriptor(services, descriptor);
         }
@@ -65,7 +65,7 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(ICollectionInterface services, ServiceDescriptor descriptor)
+        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             AddServiceDescriptor(services, descriptor);
         }
@@ -73,7 +73,7 @@ public abstract class RegistrationStrategy
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(ICollectionInterface services, ServiceDescriptor descriptor)
+        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
             {
