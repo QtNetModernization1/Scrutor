@@ -29,7 +29,7 @@ public class ServiceDescriptorAttribute : Attribute
         {
             yield return fallbackType;
 
-            var fallbackTypes = fallbackType.GetBaseTypes();
+            var fallbackTypes = TypeExtensions.GetBaseTypes(fallbackType);
 
             foreach (var type in fallbackTypes)
             {
