@@ -25,7 +25,7 @@ public abstract void Apply(Microsoft.Extensions.DependencyInjection.IServiceColl
 
 protected static void AddServiceDescriptor(Microsoft.Extensions.DependencyInjection.IServiceCollection services, Microsoft.Extensions.DependencyInjection.ServiceDescriptor descriptor)
 {
-    ((System.Collections.Generic.ICollection<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>)services).Add(descriptor);
+    services.Add(descriptor);
 }
 
     /// <summary>
