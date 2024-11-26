@@ -12,7 +12,7 @@ internal static class ServiceDescriptorExtensions
     {
         { ImplementationType: Type implementationType } when implementationType != null =>
             new ServiceDescriptor(serviceType, implementationType, descriptor.Lifetime),
-        { ImplementationFactory: Func<IServiceProvider, object> factory } when factory != null =>
+        { ImplementationFactory: System.Func<IServiceProvider, object> factory } when factory != null =>
             new ServiceDescriptor(serviceType, sp => factory(sp), descriptor.Lifetime),
         { ImplementationInstance: object instance } when instance != null =>
             new ServiceDescriptor(serviceType, instance),
