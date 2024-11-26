@@ -94,7 +94,7 @@ protected static void AddServiceDescriptor(ICollectionInterface services, Micros
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(ICollectionInterface services, ServiceDescriptor descriptor)
         {
             var behavior = Behavior;
 
@@ -113,7 +113,7 @@ protected static void AddServiceDescriptor(ICollectionInterface services, Micros
                 ((IServiceCollection)services).RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            services.Add(descriptor);
+            AddServiceDescriptor(services, descriptor);
         }
     }
 }
