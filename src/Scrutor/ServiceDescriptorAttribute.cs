@@ -23,36 +23,34 @@ public class ServiceDescriptorAttribute : Attribute
 
     public ServiceLifetime Lifetime { get; }
 
-public IEnumerable<Type> GetServiceTypes(Type fallbackType)
-{
-    if (ServiceType is null)
+    public IEnumerable<Type> GetServiceTypes(Type fallbackType)
     {
-        yield return fallbackType;
-
-        var fallbackTypes = fallbackType.GetBaseTypes();
-
-        foreach (var type in fallbackTypes)
+        if (ServiceType is null)
         {
-            if (type == typeof(object))
+            yield return fallbackType;
+
+            var fallbackTypes = fallbackType.GetBaseTypes();
+
+            foreach (var type in fallbackTypes)
             {
-                continue;
+                if (type == typeof(object))
+                {
+                    continue;
+                }
+
+                yield return type;
             }
 
-            yield return type;
+            yield break;
         }
 
-        yield break;
+        if (!fallbackType.IsBasedOn(ServiceType))
+        {
+            throw new InvalidOperationException($@"Type ""{fallbackType.ToFriendlyName()}"" is not assignable to ""{ServiceType.ToFriendlyName()}"".");
+        }
+
+        yield return ServiceType;
     }
-
-    if (!fallbackType.IsBasedOn(ServiceType))
-    {
-        throw new InvalidOperationException($@"Type ""{fallbackType.ToFriendlyName()}"" is not assignable to ""{ServiceType.ToFriendlyName()}"".");
-    }
-
-    yield return ServiceType;
-}
-
-public System.Enum Lifetime { get; }
 }
 
 [PublicAPI]
