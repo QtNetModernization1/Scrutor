@@ -7,8 +7,6 @@ using Microsoft.Extensions.DependencyModel;
 
 namespace Scrutor;
 
-using System;
-
 internal class ServiceTypeSelector : IServiceTypeSelector, ISelector
 {
     public ServiceTypeSelector(IImplementationTypeSelector inner, IEnumerable<Type> types)
