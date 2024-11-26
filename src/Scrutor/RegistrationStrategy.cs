@@ -93,7 +93,7 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(System.Collections.Generic.ICollection<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             var behavior = Behavior;
 
