@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +44,7 @@ public class ServiceDescriptorAttribute : Attribute
             yield break;
         }
 
-        if (!fallbackType.IsBasedOn(ServiceType))
+        if (!fallbackType.IsAssignableTo(ServiceType))
         {
             throw new InvalidOperationException($@"Type ""{fallbackType.ToFriendlyName()}"" is not assignable to ""{ServiceType.ToFriendlyName()}"".");
         }
