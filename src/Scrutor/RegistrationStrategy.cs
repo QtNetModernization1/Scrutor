@@ -68,9 +68,12 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
+            foreach (var existingDescriptor in services)
             {
-                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
+                if (existingDescriptor.ServiceType == descriptor.ServiceType)
+                {
+                    throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
+                }
             }
 
             services.Add(descriptor);
