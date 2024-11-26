@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using System.Reflection;
 
 namespace Scrutor;
 
@@ -75,13 +74,6 @@ public abstract class RegistrationStrategy
             }
 
             services.Add(descriptor);
-        }
-    }
-
-    public class DuplicateTypeRegistrationException : Exception
-    {
-        public DuplicateTypeRegistrationException(System.Type type) : base($"Duplicate registration for type {type.FullName}")
-        {
         }
     }
 
