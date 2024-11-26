@@ -23,6 +23,18 @@ public abstract class RegistrationStrategy
     /// <param name="descriptor">The descriptor to apply.</param>
     public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
 
+    protected static void AddServiceDescriptor(IServiceCollection services, ServiceDescriptor descriptor)
+    {
+        if (services is System.Collections.Generic.ICollection<ServiceDescriptor> collection)
+        {
+            collection.Add(descriptor);
+        }
+        else
+        {
+            services.Add(descriptor);
+        }
+    }
+
     /// <summary>
     /// Appends a new registration for existing services.
     /// </summary>
