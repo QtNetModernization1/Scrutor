@@ -57,7 +57,7 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.ICollection<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             services.Add(descriptor);
         }
@@ -65,7 +65,7 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.ICollection<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             services.Add(descriptor);
         }
@@ -73,7 +73,7 @@ public abstract class RegistrationStrategy
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.ICollection<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
