@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
 using System.Collections.ObjectModel;
-using System.Collections.Generic;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -36,12 +35,6 @@ public static partial class ServiceCollectionExtensions
         // This method is just to force the compiler to recognize IServiceCollection
         // It will never be called
         var temp = services.ToList();
-    }
-
-    // Helper method to ensure IEnumerable<T> is recognized
-    private static void EnsureIEnumerableIsRecognized<T>()
-    {
-        IEnumerable<T> enumerable = new List<T>();
     }
 
     // Helper method to ensure System.Collections.Generic.IList<T> is recognized
