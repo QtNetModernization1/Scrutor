@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
+// Explicitly include System namespace to ensure Enum is recognized
+using System;
+
 namespace Scrutor;
 
 [PublicAPI]
