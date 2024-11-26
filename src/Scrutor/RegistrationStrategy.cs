@@ -76,11 +76,7 @@ protected static void AddServiceDescriptor(ICollectionInterface services, Micros
     {
         public override void Apply(ICollectionInterface services, ServiceDescriptor descriptor)
         {
-#if NETSTANDARD2_0 || NETCOREAPP3_1 || NET6_0
             if (((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
-#else
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
-#endif
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
