@@ -9,7 +9,6 @@ namespace Scrutor;
 
 // Ensure IList<T> is recognized
 using IServiceDescriptorList = System.Collections.Generic.IList<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
-using System.Collections.Generic;
 
 public abstract class RegistrationStrategy
 {
