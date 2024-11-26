@@ -7,6 +7,9 @@ using System.Collections;
 
 namespace Scrutor;
 
+// Ensure IList<T> is recognized
+using IServiceDescriptorList = System.Collections.Generic.IList<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
+
 public abstract class RegistrationStrategy
 {
     /// <summary>
@@ -68,7 +71,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services.AsEnumerable().Any(s => s.ServiceType == descriptor.ServiceType))
+            if (((IServiceDescriptorList)services).Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
