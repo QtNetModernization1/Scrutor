@@ -18,9 +18,4 @@ internal static class ServiceDescriptorExtensions
             new ServiceDescriptor(serviceType, instance),
         _ => throw new ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor))
     };
-
-    private static ServiceLifetime GetServiceLifetime(ServiceDescriptor descriptor)
-    {
-        return (ServiceLifetime)System.Enum.ToObject(typeof(ServiceLifetime), (int)descriptor.Lifetime);
-    }
 }
