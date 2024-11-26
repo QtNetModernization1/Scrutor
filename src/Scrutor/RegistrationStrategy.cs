@@ -7,6 +7,8 @@ using System.Collections;
 
 namespace Scrutor;
 
+using IServiceDescriptorList = System.Collections.Generic.IList<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
+
 // Ensure IList<T> is recognized
 using IServiceDescriptorList = System.Collections.Generic.IList<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
 
