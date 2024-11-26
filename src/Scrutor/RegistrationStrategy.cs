@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using System.Reflection;
 
 namespace Scrutor;
 
@@ -71,7 +70,7 @@ public abstract class RegistrationStrategy
         {
             if (services.AsEnumerable().Any(s => s.ServiceType == descriptor.ServiceType))
             {
-                throw new DuplicateTypeRegistrationException((System.Type)descriptor.ServiceType);
+                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
             services.Add(descriptor);
