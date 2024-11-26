@@ -93,7 +93,7 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(ICollectionInterface services, ServiceDescriptor descriptor)
+        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             var behavior = Behavior;
 
