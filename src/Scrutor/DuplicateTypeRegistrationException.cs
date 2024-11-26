@@ -5,7 +5,7 @@ namespace Scrutor;
 public class DuplicateTypeRegistrationException : InvalidOperationException
 {
     public DuplicateTypeRegistrationException(Type serviceType)
-        : base($"A service of type '{serviceType.ToFriendlyName()}' has already been registered.")
+        : base($"A service of type '{TypeExtensions.ToFriendlyName(serviceType)}' has already been registered.")
     {
         ServiceType = serviceType;
     }
