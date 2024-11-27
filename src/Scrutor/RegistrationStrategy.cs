@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
+using System.Collections.Generic;
 
 namespace Scrutor;
 
@@ -61,7 +62,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (((IEnumerable)services).Cast<ServiceDescriptor>().Any(s => s.ServiceType == descriptor.ServiceType))
+            if (((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
