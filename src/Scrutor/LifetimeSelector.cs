@@ -43,8 +43,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
 public IImplementationTypeSelector WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
 {
-    var values = System.Enum.GetValues(typeof(Microsoft.Extensions.DependencyInjection.ServiceLifetime));
-    if (!((IList)values).Contains(lifetime))
+    if (!Enum.IsDefined(typeof(Microsoft.Extensions.DependencyInjection.ServiceLifetime), lifetime))
     {
         throw new ArgumentException($"The value of argument '{nameof(lifetime)}' ({lifetime}) is invalid for Enum type '{nameof(Microsoft.Extensions.DependencyInjection.ServiceLifetime)}'.", nameof(lifetime));
     }
