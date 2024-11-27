@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyModel;
 
 namespace Scrutor;
 
-using SystemEnum = System.Enum;
-
 internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 {
     public LifetimeSelector(ServiceTypeSelector inner, IEnumerable<TypeMap> typeMaps, IEnumerable<TypeFactoryMap> typeFactoryMaps)
@@ -42,7 +40,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     public IImplementationTypeSelector WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
     {
-        Preconditions.IsDefined((SystemEnum)lifetime, nameof(lifetime));
+        Preconditions.IsDefined(lifetime, nameof(lifetime));
 
         Inner.PropagateLifetime(lifetime);
 
