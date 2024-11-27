@@ -109,6 +109,15 @@ public static partial class ServiceCollectionExtensions
         return services.TryDecorate<TService>((service, _) => decorator(service));
     }
 
+    /// <summary>
+    /// Decorates all registered services of type <typeparamref name="TService"/>
+/// using the <paramref name="decorator"/> function.
+    /// </summary>
+    /// <typeparam name="TService">The type of services to decorate.</typeparam>
+    /// <param name="services">The services to add to.</param>
+    /// <param name="decorator">The decorator function.</param>
+    /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>
+    /// or <paramref name="decorator"/> arguments are <c>null</c>.</exception>
     public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
     {
         Preconditions.NotNull(services, nameof(services));
@@ -119,7 +128,7 @@ public static partial class ServiceCollectionExtensions
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-    /// using the <paramref name="decorator"/> function.
+/// using the <paramref name="decorator"/> function.
     /// </summary>
     /// <typeparam name="TService">The type of services to decorate.</typeparam>
     /// <param name="services">The services to add to.</param>
@@ -131,25 +140,8 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(decorator, nameof(decorator));
-        
-        return services.Decorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
-    }
 
-    /// <summary>
-    /// Decorates all registered services of type <typeparamref name="TService"/>
-    /// using the <paramref name="decorator"/> function.
-    /// </summary>
-    /// <typeparam name="TService">The type of services to decorate.</typeparam>
-    /// <param name="services">The services to add to.</param>
-    /// <param name="decorator">The decorator function.</param>
-    /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>
-    /// or <paramref name="decorator"/> arguments are <c>null</c>.</exception>
-    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
-    {
-        Preconditions.NotNull(services, nameof(services));
-        Preconditions.NotNull(decorator, nameof(decorator));
-        
-        return services.TryDecorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
+        return services.Decorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
     }
     
     /// <summary>
