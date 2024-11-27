@@ -1,6 +1,7 @@
 using Scrutor;
 using System;
 using JetBrains.Annotations;
+using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
