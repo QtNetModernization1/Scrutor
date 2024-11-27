@@ -90,24 +90,12 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                for (var i = services.Count() - 1; i >= 0; i--)
-                {
-                    if (services[i].ServiceType == descriptor.ServiceType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                for (var i = services.Count() - 1; i >= 0; i--)
-                {
-                    if (services[i].ImplementationType == descriptor.ImplementationType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
             services.Add(descriptor);
