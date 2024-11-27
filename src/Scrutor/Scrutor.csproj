@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <Description>Register services using assembly scanning and a fluent API.</Description>
     <VersionPrefix>4.2.2</VersionPrefix>
@@ -25,7 +25,6 @@
     <!-- Only increase this value in case of incompatible API changes. -->
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" Version="2021.3.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
@@ -33,7 +32,6 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="3.1.25" />
     <PackageReference Include="Microsoft.Extensions.DependencyModel" Version="3.1.25" />
   </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'net6.0'">
     <PackageReference Update="Microsoft.Extensions.DependencyInjection.Abstractions" Version="6.0.0" />
     <PackageReference Update="Microsoft.Extensions.DependencyModel" Version="6.0.0" />
