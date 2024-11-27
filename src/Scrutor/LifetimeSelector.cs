@@ -1,11 +1,11 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
-using System.Runtime.InteropServices;
-using System.Linq;
-using System.Collections;
 
 namespace Scrutor;
 
@@ -44,9 +44,9 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 public IImplementationTypeSelector WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
 {
     var values = System.Enum.GetValues(typeof(Microsoft.Extensions.DependencyInjection.ServiceLifetime));
-    if (!((IList)values).Contains(lifetime))
+    if (!((System.Collections.IList)values).Contains(lifetime))
     {
-        throw new ArgumentException($"The value of argument '{nameof(lifetime)}' ({lifetime}) is invalid for Enum type '{nameof(Microsoft.Extensions.DependencyInjection.ServiceLifetime)}'.", nameof(lifetime));
+        throw new System.ArgumentException($"The value of argument '{nameof(lifetime)}' ({lifetime}) is invalid for Enum type '{nameof(Microsoft.Extensions.DependencyInjection.ServiceLifetime)}'.", nameof(lifetime));
     }
 
     Inner.PropagateLifetime(lifetime);
