@@ -90,7 +90,7 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                for (var i = services.Count() - 1; i >= 0; i--)
+                for (var i = services.Count - 1; i >= 0; i--)
                 {
                     if (services[i].ServiceType == descriptor.ServiceType)
                     {
@@ -101,7 +101,7 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                for (var i = services.Count() - 1; i >= 0; i--)
+                for (var i = services.Count - 1; i >= 0; i--)
                 {
                     if (services[i].ImplementationType == descriptor.ImplementationType)
                     {
