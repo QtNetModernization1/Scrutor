@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using System.Runtime.InteropServices;
 
 namespace Scrutor;
 
@@ -38,14 +39,17 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
+public IImplementationTypeSelector WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
+{
+    if (!Enum.IsDefined(typeof(Microsoft.Extensions.DependencyInjection.ServiceLifetime), lifetime))
     {
-        Preconditions.IsDefined(lifetime, nameof(lifetime));
-
-        Inner.PropagateLifetime(lifetime);
-
-        return this;
+        throw new ArgumentException($"The value of argument '{nameof(lifetime)}' ({lifetime}) is invalid for Enum type '{nameof(Microsoft.Extensions.DependencyInjection.ServiceLifetime)}'.", nameof(lifetime));
     }
+
+    Inner.PropagateLifetime(lifetime);
+
+    return this;
+}
 
     #region Chain Methods
 
