@@ -28,7 +28,7 @@ internal class AttributeSelector : ISelector
 
             if (duplicates.Any())
             {
-                throw new InvalidOperationException($@"Type ""{type.ToFriendlyName()}"" has multiple ServiceDescriptor attributes with the same service type.");
+                throw new InvalidOperationException($@"Type ""{Scrutor.ReflectionExtensions.ToFriendlyName(type)}"" has multiple ServiceDescriptor attributes with the same service type.");
             }
 
             foreach (var attribute in attributes)
