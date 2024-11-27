@@ -1,4 +1,5 @@
 using System;
+using System.Type;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Scrutor;
