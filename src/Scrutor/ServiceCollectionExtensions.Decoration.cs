@@ -109,6 +109,14 @@ public static partial class ServiceCollectionExtensions
         return services.TryDecorate<TService>((service, _) => decorator(service));
     }
 
+    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
+    {
+        Preconditions.NotNull(services, nameof(services));
+        Preconditions.NotNull(decorator, nameof(decorator));
+
+        return services.TryDecorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
+    }
+
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
     /// using the <paramref name="decorator"/> function.
