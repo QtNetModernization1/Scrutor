@@ -44,7 +44,7 @@ public class ServiceDescriptorAttribute : Attribute
             yield break;
         }
 
-        if (!fallbackType.IsBasedOn(ServiceType))
+        if (!TypeExtensions.IsBasedOn(fallbackType, ServiceType))
         {
             throw new InvalidOperationException($@"Type ""{fallbackType.ToFriendlyName()}"" is not assignable to ""{ServiceType.ToFriendlyName()}"".");
         }
