@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Scrutor;
 
 namespace Scrutor;
 
@@ -36,7 +37,7 @@ internal class ImplementationTypeFilter : IImplementationTypeFilter
     {
         Preconditions.NotNull(types, nameof(types));
 
-        return Where(t => types.Any(t.IsBasedOn));
+        return Where(t => types.Any(type => TypeExtensions.IsBasedOn(t, type)));
     }
 
     public IImplementationTypeFilter WithAttribute<T>() where T : Attribute
