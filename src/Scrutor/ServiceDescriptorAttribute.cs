@@ -46,7 +46,7 @@ public class ServiceDescriptorAttribute : Attribute
 
         if (!TypeExtensions.IsBasedOn(fallbackType, ServiceType))
         {
-            throw new InvalidOperationException($@"Type ""{fallbackType.ToFriendlyName()}"" is not assignable to ""{ServiceType.ToFriendlyName()}"".");
+            throw new InvalidOperationException($@"Type ""{TypeExtensions.ToFriendlyName(fallbackType)}"" is not assignable to ""{TypeExtensions.ToFriendlyName(ServiceType)}"".");
         }
 
         yield return ServiceType;
