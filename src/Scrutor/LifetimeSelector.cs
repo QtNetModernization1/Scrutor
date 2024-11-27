@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using System.Runtime.InteropServices;
 using System.Linq;
+using System.ComponentModel;
 
 namespace Scrutor;
 
