@@ -29,12 +29,12 @@ public static partial class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
+    public static bool TryDecorate<TService, TDecorator>(this System.Collections.Generic.IEnumerable<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
 
-        return services.TryDecorate(typeof(TService), typeof(TDecorator));
+        return ((IServiceCollection)services).TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
     /// <summary>
