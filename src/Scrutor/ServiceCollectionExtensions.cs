@@ -8,6 +8,6 @@ internal static class ServiceCollectionExtensions
 {
     public static bool HasRegistration(this IServiceCollection services, Type serviceType)
     {
-        return services.Any(x => x.ServiceType == serviceType);
+        return System.Linq.Enumerable.Any(services, x => x.ServiceType == serviceType);
     }
 }
