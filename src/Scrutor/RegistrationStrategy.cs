@@ -9,6 +9,8 @@ using System.Collections;
 // Removed duplicate using directive
 #endif
 
+using System.Collections.Generic;
+
 namespace Scrutor;
 
 public abstract class RegistrationStrategy
