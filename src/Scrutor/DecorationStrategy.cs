@@ -1,6 +1,5 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
 
 namespace Scrutor;
 
@@ -34,13 +33,6 @@ public abstract class DecorationStrategy
         var instanceToDecorate = serviceProvider.GetRequiredService(decorated);
         return decoratorFactory(instanceToDecorate, serviceProvider);
     };
-
-    // Ensure IServiceProvider is recognized
-    private static void EnsureServiceProviderIsRecognized(IServiceProvider serviceProvider)
-    {
-        // This method is just to ensure IServiceProvider is recognized
-        _ = serviceProvider.GetService(typeof(object));
-    }
 
     private static DecorationStrategy Create(Type serviceType, Type? decoratorType, Func<object, IServiceProvider, object>? decoratorFactory)
     {
