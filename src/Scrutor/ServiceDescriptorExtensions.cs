@@ -18,7 +18,7 @@ internal static class ServiceDescriptorExtensions
         }
         if (descriptor.ImplementationFactory != null)
         {
-            return new ServiceDescriptor(serviceType, descriptor.ImplementationFactory, descriptor.Lifetime);
+            return new ServiceDescriptor(serviceType, s => descriptor.ImplementationFactory(s), descriptor.Lifetime);
         }
         if (descriptor.ImplementationInstance != null)
         {
