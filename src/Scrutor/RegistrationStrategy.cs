@@ -43,35 +43,29 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor);
+    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor) =>
-            (services as IServiceCollection)?.TryAdd(descriptor);
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) =>
+            services.TryAdd(descriptor);
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor) => ((IServiceCollection)services).Add(descriptor);
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.Add(descriptor);
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            var serviceCollection = services as IServiceCollection;
-            if (serviceCollection == null)
-            {
-                throw new System.ArgumentException("Services must be of type IServiceCollection", nameof(services));
-            }
-
-            if (serviceCollection.HasRegistration(descriptor.ServiceType))
+            if (services.HasRegistration(descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            serviceCollection.Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
@@ -84,13 +78,8 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is not IServiceCollection serviceCollection)
-            {
-                throw new System.ArgumentException("Services must be of type IServiceCollection", nameof(services));
-            }
-
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
@@ -100,27 +89,27 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                for (var i = serviceCollection.Count - 1; i >= 0; i--)
+                for (var i = services.Count - 1; i >= 0; i--)
                 {
-                    if (serviceCollection[i].ServiceType == descriptor.ServiceType)
+                    if (services[i].ServiceType == descriptor.ServiceType)
                     {
-                        serviceCollection.RemoveAt(i);
+                        services.RemoveAt(i);
                     }
                 }
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                for (var i = serviceCollection.Count - 1; i >= 0; i--)
+                for (var i = services.Count - 1; i >= 0; i--)
                 {
-                    if (serviceCollection[i].ImplementationType == descriptor.ImplementationType)
+                    if (services[i].ImplementationType == descriptor.ImplementationType)
                     {
-                        serviceCollection.RemoveAt(i);
+                        services.RemoveAt(i);
                     }
                 }
             }
 
-            serviceCollection.Add(descriptor);
+            services.Add(descriptor);
         }
     }
 }
