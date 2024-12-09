@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,7 +21,7 @@ public class ServiceDescriptorAttribute : Attribute
 
     public Type? ServiceType { get; }
 
-    public ServiceLifetime Lifetime { get; }
+    public System.Enum Lifetime { get; }
 
     public IEnumerable<Type> GetServiceTypes(Type fallbackType)
     {
