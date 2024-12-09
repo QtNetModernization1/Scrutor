@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections;
 
 #if NETSTANDARD2_0 || NET461
-// Removed duplicate using directive
+using System.Collections.Generic;
 #endif
 
 namespace Scrutor;
