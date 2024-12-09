@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using System;
 
 namespace Scrutor;
 
@@ -21,24 +22,24 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     private IEnumerable<TypeFactoryMap> TypeFactoryMaps { get; }
 
-    public ServiceLifetime? Lifetime { get; set; }
+    public System.ServiceLifetime? Lifetime { get; set; }
 
     public IImplementationTypeSelector WithSingletonLifetime()
     {
-        return WithLifetime(ServiceLifetime.Singleton);
+        return WithLifetime(System.ServiceLifetime.Singleton);
     }
 
     public IImplementationTypeSelector WithScopedLifetime()
     {
-        return WithLifetime(ServiceLifetime.Scoped);
+        return WithLifetime(System.ServiceLifetime.Scoped);
     }
 
     public IImplementationTypeSelector WithTransientLifetime()
     {
-        return WithLifetime(ServiceLifetime.Transient);
+        return WithLifetime(System.ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
+    public IImplementationTypeSelector WithLifetime(System.ServiceLifetime lifetime)
     {
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
