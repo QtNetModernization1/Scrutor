@@ -1,7 +1,6 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 using System.Linq;
 
 namespace Scrutor.Tests;
