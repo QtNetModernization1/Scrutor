@@ -10,7 +10,7 @@ internal static class ServiceDescriptorExtensions
         new(descriptor.ServiceType, implementationFactory, descriptor.Lifetime);
 
 #if NET461
-    public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType)
+    public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, System.Type serviceType)
     {
         if (descriptor.ImplementationType != null)
         {
