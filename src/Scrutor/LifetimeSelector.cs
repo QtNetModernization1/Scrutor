@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using System.Linq;
 
 namespace Scrutor;
 
@@ -38,14 +39,19 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
-    {
-        Preconditions.IsDefined(lifetime, nameof(lifetime));
+public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
+{
+    Preconditions.IsDefined(lifetime, nameof(lifetime));
 
-        Inner.PropagateLifetime(lifetime);
+    Inner.PropagateLifetime(lifetime);
 
-        return this;
-    }
+    return this;
+}
+
+private bool IsDefined<TEnum>(TEnum value) where TEnum : struct, Enum
+{
+    return Enum.IsDefined(typeof(TEnum), value);
+}
 
     #region Chain Methods
 
