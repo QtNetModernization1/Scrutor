@@ -4,15 +4,13 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Scrutor;
 
-using System;
-
 internal static class ServiceDescriptorExtensions
 {
     public static ServiceDescriptor WithImplementationFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> implementationFactory) =>
         new(descriptor.ServiceType, implementationFactory, descriptor.Lifetime);
 
 #if NET461
-    public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType)
+    public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, System.Type serviceType)
     {
         if (descriptor.ImplementationType != null)
         {
@@ -26,7 +24,7 @@ internal static class ServiceDescriptorExtensions
         {
             return new ServiceDescriptor(serviceType, descriptor.ImplementationInstance);
         }
-        throw new ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor));
+        throw new System.ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor));
     }
 #elif NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER || NET6_0_OR_GREATER
     public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType) => descriptor switch
