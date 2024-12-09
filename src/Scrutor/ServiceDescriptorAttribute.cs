@@ -1,7 +1,10 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+
+// Explicitly adding System namespace to ensure Enum is recognized
+using System;
 
 namespace Scrutor;
 
