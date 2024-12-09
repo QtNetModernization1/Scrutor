@@ -59,9 +59,9 @@ public abstract class RegistrationStrategy
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
-            if (services.HasRegistration(descriptor.ServiceType))
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
