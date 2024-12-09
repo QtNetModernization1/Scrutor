@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,11 +45,11 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor);
+    public abstract void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor) =>
+        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor) =>
             ((IServiceCollection)services).TryAdd(descriptor);
     }
 
