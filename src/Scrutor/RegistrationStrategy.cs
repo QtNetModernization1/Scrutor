@@ -44,22 +44,22 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor);
+    public abstract void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor) =>
+        public override void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor) =>
             ((IServiceCollection)services).TryAdd(descriptor);
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor) => ((IServiceCollection)services).Add(descriptor);
+        public override void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor) => ((IServiceCollection)services).Add(descriptor);
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
@@ -79,7 +79,7 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             var behavior = Behavior;
 
