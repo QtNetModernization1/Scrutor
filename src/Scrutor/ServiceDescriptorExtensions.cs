@@ -26,6 +26,23 @@ internal static class ServiceDescriptorExtensions
         }
         throw new System.ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor));
     }
+#elif NETSTANDARD2_0 || NETCOREAPP3_1 || NET6_0
+    public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, System.Type serviceType)
+    {
+        if (descriptor.ImplementationType != null)
+        {
+            return new ServiceDescriptor(serviceType, descriptor.ImplementationType, descriptor.Lifetime);
+        }
+        if (descriptor.ImplementationFactory != null)
+        {
+            return new ServiceDescriptor(serviceType, s => descriptor.ImplementationFactory(s), descriptor.Lifetime);
+        }
+        if (descriptor.ImplementationInstance != null)
+        {
+            return new ServiceDescriptor(serviceType, descriptor.ImplementationInstance);
+        }
+        throw new System.ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor));
+    }
 #elif NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER || NET6_0_OR_GREATER
     public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType) => descriptor switch
     {
