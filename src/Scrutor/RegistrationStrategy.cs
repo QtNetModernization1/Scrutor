@@ -84,8 +84,14 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
+            var serviceCollection = services as IServiceCollection;
+            if (serviceCollection == null)
+            {
+                throw new System.ArgumentException("Services must be of type IServiceCollection", nameof(services));
+            }
+
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
@@ -95,27 +101,27 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                for (var i = services.Count - 1; i >= 0; i--)
+                for (var i = serviceCollection.Count - 1; i >= 0; i--)
                 {
-                    if (services[i].ServiceType == descriptor.ServiceType)
+                    if (serviceCollection[i].ServiceType == descriptor.ServiceType)
                     {
-                        services.RemoveAt(i);
+                        serviceCollection.RemoveAt(i);
                     }
                 }
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                for (var i = services.Count - 1; i >= 0; i--)
+                for (var i = serviceCollection.Count - 1; i >= 0; i--)
                 {
-                    if (services[i].ImplementationType == descriptor.ImplementationType)
+                    if (serviceCollection[i].ImplementationType == descriptor.ImplementationType)
                     {
-                        services.RemoveAt(i);
+                        serviceCollection.RemoveAt(i);
                     }
                 }
             }
 
-            services.Add(descriptor);
+            serviceCollection.Add(descriptor);
         }
     }
 }
