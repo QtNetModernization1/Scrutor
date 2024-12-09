@@ -7,7 +7,7 @@ namespace Scrutor;
 internal static class ServiceDescriptorExtensions
 {
     public static ServiceDescriptor WithImplementationFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> implementationFactory) =>
-        new ServiceDescriptor(descriptor.ServiceType, implementationFactory, descriptor.Lifetime);
+        new(descriptor.ServiceType, implementationFactory, descriptor.Lifetime);
 
 #if NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER || NET6_0_OR_GREATER || NET461
     public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType) => descriptor switch
