@@ -1,11 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-
-#if NETSTANDARD2_0 || NET461
-using System.Linq;
-#endif
 
 namespace Scrutor;
 
