@@ -93,7 +93,7 @@ public abstract class RegistrationStrategy
                 {
                     if (services[i].ServiceType == descriptor.ServiceType)
                     {
-                        services.RemoveAt(i);
+                        ((System.Collections.IList)services).RemoveAt(i);
                     }
                 }
             }
@@ -104,7 +104,7 @@ public abstract class RegistrationStrategy
                 {
                     if (services[i].ImplementationType == descriptor.ImplementationType)
                     {
-                        services.RemoveAt(i);
+                        ((System.Collections.IList)services).RemoveAt(i);
                     }
                 }
             }
