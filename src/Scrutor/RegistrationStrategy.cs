@@ -79,7 +79,7 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.ICollection<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             var behavior = Behavior;
 
@@ -88,17 +88,19 @@ public abstract class RegistrationStrategy
                 behavior = ReplacementBehavior.ServiceType;
             }
 
+            var serviceCollection = (IServiceCollection)services;
+
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            services.Add(descriptor);
+            serviceCollection.Add(descriptor);
         }
     }
 }
