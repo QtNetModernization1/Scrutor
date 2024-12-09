@@ -5,10 +5,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
-#if NETSTANDARD2_0 || NET461
-// Removed duplicate using directive
-#endif
-
 namespace Scrutor;
 
 public abstract class RegistrationStrategy
@@ -72,7 +68,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
+            if (System.Linq.Enumerable.Any<ServiceDescriptor>(services, s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
