@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Collections;
 
 namespace Scrutor;
 
@@ -55,8 +56,10 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) =>
-            services.Add(descriptor);
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        {
+            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+        }
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
