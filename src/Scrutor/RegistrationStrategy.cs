@@ -7,6 +7,8 @@ using System.Collections;
 
 namespace Scrutor;
 
+using IEnumerableOfServiceDescriptor = System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
+
 public abstract class RegistrationStrategy
 {
     /// <summary>
@@ -46,13 +48,13 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Microsoft.Extensions.DependencyInjection.ServiceDescriptor descriptor);
+    public abstract void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Microsoft.Extensions.DependencyInjection.ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            if (services is Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
+            if (services is IServiceCollection serviceCollection)
             {
                 serviceCollection.TryAdd(descriptor);
             }
@@ -65,9 +67,9 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Microsoft.Extensions.DependencyInjection.ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            if (services is Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
+            if (services is IServiceCollection serviceCollection)
             {
                 serviceCollection.Add(descriptor);
             }
@@ -80,9 +82,9 @@ public abstract class RegistrationStrategy
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Microsoft.Extensions.DependencyInjection.ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            if (services is Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection)
+            if (services is IServiceCollection serviceCollection)
             {
                 if (serviceCollection.Any(s => s.ServiceType == descriptor.ServiceType))
                 {
@@ -107,7 +109,7 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Microsoft.Extensions.DependencyInjection.ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
             if (services is not IServiceCollection serviceCollection)
             {
