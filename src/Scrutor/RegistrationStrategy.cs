@@ -109,8 +109,13 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
+            if (services is not IServiceCollection serviceCollection)
+            {
+                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
+            }
+
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
@@ -120,15 +125,15 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            services.Add(descriptor);
+            serviceCollection.Add(descriptor);
         }
     }
 }
