@@ -1,5 +1,6 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -21,6 +22,12 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(services, nameof(services));
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
+    }
+
+    // Add this extension method to ensure IServiceCollection is recognized
+    public static IServiceCollection AsServiceCollection(this IEnumerable<ServiceDescriptor> services)
+    {
+        return services as IServiceCollection ?? new ServiceCollection(services);
     }
 
     /// <summary>
