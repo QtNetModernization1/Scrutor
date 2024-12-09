@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
-#if NETSTANDARD2_0 || NET461 || NETCOREAPP3_1 || NET6_0
-using System.Collections.Generic;
+#if NETSTANDARD2_0 || NET461
+// Removed duplicate using directive
 #endif
 
 namespace Scrutor;
@@ -72,17 +72,10 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-#if NETSTANDARD2_0 || NET461 || NETCOREAPP3_1 || NET6_0
             if (((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
-#else
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
-            {
-                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
-            }
-#endif
 
             services.Add(descriptor);
         }
