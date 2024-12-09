@@ -68,7 +68,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (System.Linq.Enumerable.Any<ServiceDescriptor>(services, s => s.ServiceType == descriptor.ServiceType))
+            if (System.Linq.Enumerable.Any(services as System.Collections.Generic.IEnumerable<ServiceDescriptor>, s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
