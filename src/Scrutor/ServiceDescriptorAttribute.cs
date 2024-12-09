@@ -21,7 +21,7 @@ public class ServiceDescriptorAttribute : Attribute
 
     public Type? ServiceType { get; }
 
-    public System.Enum Lifetime { get; }
+    public ServiceLifetime Lifetime { get; }
 
     public IEnumerable<Type> GetServiceTypes(Type fallbackType)
     {
