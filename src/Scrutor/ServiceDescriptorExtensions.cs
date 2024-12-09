@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Scrutor;
@@ -18,21 +17,21 @@ internal static class ServiceDescriptorExtensions
         _ => throw new ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor))
     };
 #else
-public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, System.Type serviceType)
-{
-    if (descriptor.ImplementationType != null)
+    public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType)
     {
-        return new ServiceDescriptor(serviceType, descriptor.ImplementationType, descriptor.Lifetime);
+        if (descriptor.ImplementationType != null)
+        {
+            return new ServiceDescriptor(serviceType, descriptor.ImplementationType, descriptor.Lifetime);
+        }
+        if (descriptor.ImplementationFactory != null)
+        {
+            return new ServiceDescriptor(serviceType, descriptor.ImplementationFactory, descriptor.Lifetime);
+        }
+        if (descriptor.ImplementationInstance != null)
+        {
+            return new ServiceDescriptor(serviceType, descriptor.ImplementationInstance);
+        }
+        throw new ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor));
     }
-    if (descriptor.ImplementationFactory != null)
-    {
-        return new ServiceDescriptor(serviceType, descriptor.ImplementationFactory, descriptor.Lifetime);
-    }
-    if (descriptor.ImplementationInstance != null)
-    {
-        return new ServiceDescriptor(serviceType, descriptor.ImplementationInstance);
-    }
-    throw new ArgumentException($"No implementation factory or instance or type found for {descriptor.ServiceType}.", nameof(descriptor));
-}
 #endif
 }
