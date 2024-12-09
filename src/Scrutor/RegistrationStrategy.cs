@@ -1,7 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Collections.Generic;
-using System.Collections;
 
 namespace Scrutor;
 
@@ -94,7 +93,7 @@ public abstract class RegistrationStrategy
                 {
                     if (services[i].ServiceType == descriptor.ServiceType)
                     {
-                        ((IList)services).RemoveAt(i);
+                        ((System.Collections.IList)services).RemoveAt(i);
                     }
                 }
             }
@@ -105,7 +104,7 @@ public abstract class RegistrationStrategy
                 {
                     if (services[i].ImplementationType == descriptor.ImplementationType)
                     {
-                        ((IList)services).RemoveAt(i);
+                        ((System.Collections.IList)services).RemoveAt(i);
                     }
                 }
             }
