@@ -7,6 +7,8 @@ using System.Collections;
 
 namespace Scrutor;
 
+using System.Collections.Generic;
+
 public abstract class RegistrationStrategy
 {
     /// <summary>
