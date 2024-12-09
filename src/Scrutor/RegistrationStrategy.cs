@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
-namespace Scrutor;
-
+#if NETSTANDARD2_0 || NET461
 using System.Collections.Generic;
+#endif
+
+namespace Scrutor;
 
 public abstract class RegistrationStrategy
 {
@@ -52,8 +54,10 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) =>
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        {
             services.TryAdd(descriptor);
+        }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
