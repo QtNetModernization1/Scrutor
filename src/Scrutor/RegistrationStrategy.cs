@@ -42,20 +42,17 @@ public abstract class RegistrationStrategy
     }
 
     /// <summary>
-    /// Applies the <see cref="ServiceDescriptor"/> to the <see cref="IList{ServiceDescriptor}"/>.
+    /// Applies the <see cref="ServiceDescriptor"/> to the <see cref="IServiceCollection"/>.
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IList<ServiceDescriptor> services, ServiceDescriptor descriptor);
+    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (!services.Any(s => s.ServiceType == descriptor.ServiceType))
-            {
-                services.Add(descriptor);
-            }
+            services.TryAdd(descriptor);
         }
     }
 
