@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
-using System.Collections;
 
 #if NETSTANDARD2_0 || NET461
 // Removed duplicate using directive
