@@ -52,9 +52,16 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            services.TryAdd(descriptor);
+            if (services is IServiceCollection serviceCollection)
+            {
+                serviceCollection.TryAdd(descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
+            }
         }
     }
 
