@@ -64,7 +64,7 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((IList<ServiceDescriptor>)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
