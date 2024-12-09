@@ -9,32 +9,32 @@ public abstract class DecorationStrategy
     {
         ServiceType = serviceType;
     }
-    
+
     public Type ServiceType { get; }
-    
+
     public abstract bool CanDecorate(Type serviceType);
-    
-    public abstract Func<IServiceProvider, object> CreateDecorator(Type serviceType);
-    
-    internal static DecorationStrategy WithType(Type serviceType, Type decoratorType) => 
+
+    public abstract Func<IServiceProvider, System.Object> CreateDecorator(Type serviceType);
+
+    internal static DecorationStrategy WithType(Type serviceType, Type decoratorType) =>
         Create(serviceType, decoratorType, decoratorFactory: null);
 
-    internal static DecorationStrategy WithFactory(Type serviceType, Func<object, IServiceProvider, object> decoratorFactory) => 
+    internal static DecorationStrategy WithFactory(Type serviceType, Func<System.Object, IServiceProvider, System.Object> decoratorFactory) =>
         Create(serviceType, decoratorType: null, decoratorFactory);
-    
-    protected static Func<IServiceProvider, object> TypeDecorator(Type serviceType, Type decoratorType) => serviceProvider =>
+
+    protected static Func<IServiceProvider, System.Object> TypeDecorator(Type serviceType, Type decoratorType) => serviceProvider =>
     {
         var instanceToDecorate = serviceProvider.GetRequiredService(serviceType);
         return ActivatorUtilities.CreateInstance(serviceProvider, decoratorType, instanceToDecorate);
     };
 
-    protected static Func<IServiceProvider, object> FactoryDecorator(Type decorated, Func<object, IServiceProvider, object> decoratorFactory) => serviceProvider =>
+    protected static Func<IServiceProvider, System.Object> FactoryDecorator(Type decorated, Func<System.Object, IServiceProvider, System.Object> decoratorFactory) => serviceProvider =>
     {
         var instanceToDecorate = serviceProvider.GetRequiredService(decorated);
         return decoratorFactory(instanceToDecorate, serviceProvider);
     };
 
-    private static DecorationStrategy Create(Type serviceType, Type? decoratorType, Func<object, IServiceProvider, object>? decoratorFactory)
+    private static DecorationStrategy Create(Type serviceType, Type? decoratorType, Func<System.Object, IServiceProvider, System.Object>? decoratorFactory)
     {
         if (serviceType.IsOpenGeneric())
         {
