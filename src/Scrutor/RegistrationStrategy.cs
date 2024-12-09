@@ -1,5 +1,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using System.Collections.Generic;
 
 namespace Scrutor;
 
@@ -21,7 +22,7 @@ public abstract class RegistrationStrategy
     public static readonly RegistrationStrategy Throw = new ThrowRegistrationStrategy();
 
     /// <summary>
-    /// Replaces existing service registrations using <see cref="ReplacementBehavior.Default"/>.
+/// Replaces existing service registrations using <see cref="ReplacementBehavior.Default"/>.
     /// </summary>
     public static RegistrationStrategy Replace()
     {
@@ -42,11 +43,12 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
+    public abstract void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.TryAdd(descriptor);
+        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor) =>
+            (services as IServiceCollection)?.TryAdd(descriptor);
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
