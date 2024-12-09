@@ -50,30 +50,30 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((IServiceCollection)services).TryAdd(descriptor);
+            services.TryAdd(descriptor);
         }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((IServiceCollection)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            ((IServiceCollection)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
@@ -86,9 +86,8 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            var serviceCollection = (IServiceCollection)services;
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
@@ -98,15 +97,15 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            serviceCollection.Add(descriptor);
+            services.Add(descriptor);
         }
     }
 }
