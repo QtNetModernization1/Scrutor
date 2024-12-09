@@ -53,19 +53,20 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.Add(descriptor);
+        public override void Apply(System.Collections.Generic.IList<ServiceDescriptor> services, ServiceDescriptor descriptor) => ((IServiceCollection)services).Add(descriptor);
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
-            if (services.HasRegistration(descriptor.ServiceType))
+            var serviceCollection = (IServiceCollection)services;
+            if (serviceCollection.HasRegistration(descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            services.Add(descriptor);
+            serviceCollection.Add(descriptor);
         }
     }
 
