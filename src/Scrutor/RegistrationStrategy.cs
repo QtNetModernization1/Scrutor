@@ -53,54 +53,54 @@ public abstract class RegistrationStrategy
             services.TryAdd(descriptor);
     }
 
-private sealed class AppendRegistrationStrategy : RegistrationStrategy
-{
-    public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) =>
-        services.Add(descriptor);
-}
-
-private sealed class ThrowRegistrationStrategy : RegistrationStrategy
-{
-    public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+    private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        if (System.Linq.Enumerable.Any<ServiceDescriptor>(services, s => s.ServiceType == descriptor.ServiceType))
-        {
-            throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
-        }
-
-        services.Add(descriptor);
-    }
-}
-
-private sealed class ReplaceRegistrationStrategy : RegistrationStrategy
-{
-    public ReplaceRegistrationStrategy(ReplacementBehavior behavior)
-    {
-        Behavior = behavior;
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) =>
+            services.Add(descriptor);
     }
 
-    private ReplacementBehavior Behavior { get; }
-
-    public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+    private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        var behavior = Behavior;
-
-        if (behavior == ReplacementBehavior.Default)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            behavior = ReplacementBehavior.ServiceType;
-        }
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
+            {
+                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
+            }
 
-        if (behavior.HasFlag(ReplacementBehavior.ServiceType))
-        {
-            services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+            services.Add(descriptor);
         }
-
-        if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
-        {
-            services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
-        }
-
-        services.Add(descriptor);
     }
-}
+
+    private sealed class ReplaceRegistrationStrategy : RegistrationStrategy
+    {
+        public ReplaceRegistrationStrategy(ReplacementBehavior behavior)
+        {
+            Behavior = behavior;
+        }
+
+        private ReplacementBehavior Behavior { get; }
+
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        {
+            var behavior = Behavior;
+
+            if (behavior == ReplacementBehavior.Default)
+            {
+                behavior = ReplacementBehavior.ServiceType;
+            }
+
+            if (behavior.HasFlag(ReplacementBehavior.ServiceType))
+            {
+                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+            }
+
+            if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
+            {
+                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+            }
+
+            services.Add(descriptor);
+        }
+    }
 }
