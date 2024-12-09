@@ -1,9 +1,6 @@
 using System;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
-#if NET461
-using System;
-#endif
 
 namespace Scrutor;
 
