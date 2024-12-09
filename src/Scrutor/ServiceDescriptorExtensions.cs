@@ -9,7 +9,7 @@ internal static class ServiceDescriptorExtensions
     public static ServiceDescriptor WithImplementationFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> implementationFactory) =>
         new(descriptor.ServiceType, implementationFactory, descriptor.Lifetime);
 
-#if NET461
+#if NET461 || NETSTANDARD2_0
     public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, System.Type serviceType)
     {
         if (descriptor.ImplementationType != null)
@@ -18,7 +18,7 @@ internal static class ServiceDescriptorExtensions
         }
         if (descriptor.ImplementationFactory != null)
         {
-            return new ServiceDescriptor(serviceType, s => descriptor.ImplementationFactory(s), descriptor.Lifetime);
+            return new ServiceDescriptor(serviceType, (Func<IServiceProvider, object>)(s => descriptor.ImplementationFactory(s)), descriptor.Lifetime);
         }
         if (descriptor.ImplementationInstance != null)
         {
