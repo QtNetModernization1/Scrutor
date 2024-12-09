@@ -5,8 +5,8 @@ namespace Scrutor;
 
 internal static class ServiceDescriptorExtensions
 {
-    public static ServiceDescriptor WithImplementationFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> implementationFactory) => 
-        new(descriptor.ServiceType, implementationFactory, descriptor.Lifetime);
+    public static ServiceDescriptor WithImplementationFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> implementationFactory) =>
+        new ServiceDescriptor(descriptor.ServiceType, implementationFactory, descriptor.Lifetime);
 
     public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType) => descriptor switch
     {
