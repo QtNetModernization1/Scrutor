@@ -66,27 +66,6 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
-            {
-                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
-            }
-
-            services.Add(descriptor);
-        }
-    }
-
-    private sealed class AppendRegistrationStrategy : RegistrationStrategy
-    {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
-        {
-            services.Add(descriptor);
-        }
-    }
-
-    private sealed class ThrowRegistrationStrategy : RegistrationStrategy
-    {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
-        {
             if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
