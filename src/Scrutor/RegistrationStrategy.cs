@@ -53,7 +53,7 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor) => services.Add(descriptor);
+        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor) => ((IServiceCollection)services).Add(descriptor);
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
