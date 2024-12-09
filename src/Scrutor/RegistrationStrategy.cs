@@ -82,14 +82,21 @@ public abstract class RegistrationStrategy
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
+            if (services is IServiceCollection serviceCollection)
             {
-                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
-            }
+                if (serviceCollection.Any(s => s.ServiceType == descriptor.ServiceType))
+                {
+                    throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
+                }
 
-            services.Add(descriptor);
+                serviceCollection.Add(descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
+            }
         }
     }
 
