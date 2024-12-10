@@ -1,9 +1,9 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
 
 namespace Scrutor
 {
@@ -72,7 +72,7 @@ namespace Scrutor
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
