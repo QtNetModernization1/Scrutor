@@ -24,9 +24,6 @@ namespace Scrutor;
         /// </summary>
         public static readonly RegistrationStrategy Throw = new ThrowRegistrationStrategy();
 
-        // Added to ensure IEnumerable<> is recognized
-        protected IEnumerable<ServiceDescriptor> GetServiceDescriptors(IServiceCollection services) => services;
-
         /// <summary>
 /// Replaces existing service registrations using <see cref="ReplacementBehavior.Default"/>.
         /// </summary>
