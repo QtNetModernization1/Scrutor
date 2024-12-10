@@ -7,8 +7,6 @@ using System.Collections;
 
 namespace Scrutor;
 
-using IEnumerableOfServiceDescriptor = System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
-
 public abstract class RegistrationStrategy
 {
     /// <summary>
@@ -48,55 +46,34 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor);
+    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is IServiceCollection serviceCollection)
-            {
-                serviceCollection.TryAdd(descriptor);
-            }
-            else
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
+            services.TryAdd(descriptor);
         }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is IServiceCollection serviceCollection)
-            {
-                serviceCollection.Add(descriptor);
-            }
-            else
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
+            services.Add(descriptor);
         }
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is IServiceCollection serviceCollection)
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
-                if (serviceCollection.Any(s => s.ServiceType == descriptor.ServiceType))
-                {
-                    throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
-                }
+                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
+            }
 
-                serviceCollection.Add(descriptor);
-            }
-            else
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
+            services.Add(descriptor);
         }
     }
 
@@ -109,13 +86,8 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is not IServiceCollection serviceCollection)
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
-
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
@@ -125,15 +97,15 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            serviceCollection.Add(descriptor);
+            services.Add(descriptor);
         }
     }
 }
