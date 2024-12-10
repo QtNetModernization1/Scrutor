@@ -47,12 +47,12 @@ namespace Scrutor
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="descriptor">The descriptor to apply.</param>
-        public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
+        public abstract void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor);
     }
 
     internal sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor)
         {
             if (!services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
@@ -63,7 +63,7 @@ namespace Scrutor
 
     internal sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, ServiceDescriptor descriptor)
         {
             services.Add(descriptor);
         }
