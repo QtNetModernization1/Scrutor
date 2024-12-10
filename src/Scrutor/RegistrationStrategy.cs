@@ -58,9 +58,9 @@ namespace Scrutor;
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((IServiceCollection)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
