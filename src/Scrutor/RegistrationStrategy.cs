@@ -8,7 +8,6 @@ using System.Collections;
 namespace Scrutor;
 
 using IEnumerableOfServiceDescriptor = System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
-using System.Collections.Generic;
 
 public abstract class RegistrationStrategy
 {
@@ -49,7 +48,7 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor);
+    public abstract void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
