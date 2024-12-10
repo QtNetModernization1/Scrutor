@@ -48,34 +48,55 @@ public abstract class RegistrationStrategy
     /// </summary>
     /// <param name="services">The service collection.</param>
     /// <param name="descriptor">The descriptor to apply.</param>
-    public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
+    public abstract void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            services.TryAdd(descriptor);
+            if (services is IServiceCollection serviceCollection)
+            {
+                serviceCollection.TryAdd(descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
+            }
         }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            services.Add(descriptor);
+            if (services is IServiceCollection serviceCollection)
+            {
+                serviceCollection.Add(descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
+            }
         }
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
+            if (services is IServiceCollection serviceCollection)
             {
-                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
-            }
+                if (serviceCollection.Any(s => s.ServiceType == descriptor.ServiceType))
+                {
+                    throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
+                }
 
-            services.Add(descriptor);
+                serviceCollection.Add(descriptor);
+            }
+            else
+            {
+                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
+            }
         }
     }
 
@@ -88,8 +109,13 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
+            if (services is not IServiceCollection serviceCollection)
+            {
+                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
+            }
+
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
@@ -99,27 +125,15 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                for (int i = services.Count - 1; i >= 0; i--)
-                {
-                    if (services[i].ServiceType == descriptor.ServiceType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                for (int i = services.Count - 1; i >= 0; i--)
-                {
-                    if (services[i].ImplementationType == descriptor.ImplementationType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            services.Add(descriptor);
+            serviceCollection.Add(descriptor);
         }
     }
 }
