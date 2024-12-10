@@ -68,7 +68,7 @@ namespace Scrutor
         }
     }
 
-    private sealed class ThrowRegistrationStrategy : RegistrationStrategy
+    internal sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
