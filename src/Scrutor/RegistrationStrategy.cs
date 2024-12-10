@@ -65,7 +65,7 @@ namespace Scrutor
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
