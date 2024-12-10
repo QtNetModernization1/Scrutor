@@ -50,51 +50,30 @@ namespace Scrutor;
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is IServiceCollection serviceCollection)
-            {
-                serviceCollection.TryAdd(descriptor);
-            }
-            else
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
+            services.TryAdd(descriptor);
         }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is IServiceCollection serviceCollection)
-            {
-                serviceCollection.Add(descriptor);
-            }
-            else
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
+            services.Add(descriptor);
         }
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is IServiceCollection serviceCollection)
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
-                if (serviceCollection.Any(s => s.ServiceType == descriptor.ServiceType))
-                {
-                    throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
-                }
+                throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
+            }
 
-                serviceCollection.Add(descriptor);
-            }
-            else
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
+            services.Add(descriptor);
         }
     }
 
@@ -107,12 +86,8 @@ namespace Scrutor;
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services is not IServiceCollection serviceCollection)
-            {
-                throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
-            }
 
             var behavior = Behavior;
 
