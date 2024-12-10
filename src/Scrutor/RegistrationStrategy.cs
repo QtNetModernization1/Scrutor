@@ -52,7 +52,7 @@ namespace Scrutor
 
     internal sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(Microsoft.Extensions.DependencyInjection.IServiceCollection services, Microsoft.Extensions.DependencyInjection.ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
             if (!services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
