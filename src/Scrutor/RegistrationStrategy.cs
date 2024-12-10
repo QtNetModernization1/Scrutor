@@ -53,7 +53,7 @@ namespace Scrutor
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (!services.Any(s => s.ServiceType == descriptor.ServiceType))
+            if (!services.AsEnumerable().Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 services.Add(descriptor);
             }
