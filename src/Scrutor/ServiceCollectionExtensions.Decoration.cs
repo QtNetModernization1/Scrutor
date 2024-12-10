@@ -106,7 +106,7 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(decorator, nameof(decorator));
 
-        return services.TryDecorate<TService>((service, _) => decorator(service));
+        return services.TryDecorate<TService, IServiceProvider>((service, _) => decorator(service));
     }
 
     /// <summary>
