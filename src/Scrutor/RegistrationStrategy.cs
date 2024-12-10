@@ -130,7 +130,7 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                serviceCollection.RemoveAll(s => s.ImplementationType != null && s.ImplementationType.Equals(descriptor.ImplementationType));
+                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
             serviceCollection.Add(descriptor);
