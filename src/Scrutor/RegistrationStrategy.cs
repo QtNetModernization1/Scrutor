@@ -52,7 +52,7 @@ namespace Scrutor;
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            services.TryAdd(descriptor);
+            ((IServiceCollection)services).TryAdd(descriptor);
         }
     }
 
@@ -68,12 +68,12 @@ namespace Scrutor;
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
+            if (System.Linq.Enumerable.Any<ServiceDescriptor>((System.Collections.Generic.IEnumerable<ServiceDescriptor>)services, s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            services.Add(descriptor);
+            ((IServiceCollection)services).Add(descriptor);
         }
     }
 
