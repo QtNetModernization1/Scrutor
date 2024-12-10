@@ -46,13 +46,13 @@ namespace Scrutor;
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="descriptor">The descriptor to apply.</param>
-        public abstract void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor);
+        public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((IServiceCollection)services).TryAdd(descriptor);
+            services.TryAdd(descriptor);
         }
     }
 
