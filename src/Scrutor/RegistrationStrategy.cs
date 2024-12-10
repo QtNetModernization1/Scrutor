@@ -81,7 +81,7 @@ namespace Scrutor
         }
     }
 
-    private sealed class ReplaceRegistrationStrategy : RegistrationStrategy
+    internal sealed class ReplaceRegistrationStrategy : RegistrationStrategy
     {
         public ReplaceRegistrationStrategy(ReplacementBehavior behavior)
         {
