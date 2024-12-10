@@ -5,6 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.ObjectModel;
+using System.Collections.Generic;
 
 namespace Scrutor
 {
@@ -67,6 +68,13 @@ namespace Scrutor
         {
             services.Add(descriptor);
         }
+    }
+
+    // Ensure IEnumerable<T> is recognized
+    private class EnumerableWrapper<T> : IEnumerable<T>
+    {
+        public IEnumerator<T> GetEnumerator() => throw new NotImplementedException();
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => throw new NotImplementedException();
     }
 
     internal sealed class ThrowRegistrationStrategy : RegistrationStrategy
