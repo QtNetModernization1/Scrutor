@@ -5,8 +5,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Collections;
 
-namespace Scrutor;
-
+namespace Scrutor
+{
     public abstract class RegistrationStrategy
     {
         /// <summary>
@@ -47,8 +47,9 @@ namespace Scrutor;
         /// <param name="services">The service collection.</param>
         /// <param name="descriptor">The descriptor to apply.</param>
         public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
+    }
 
-    private sealed class SkipRegistrationStrategy : RegistrationStrategy
+    internal sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
@@ -59,7 +60,7 @@ namespace Scrutor;
         }
     }
 
-    private sealed class AppendRegistrationStrategy : RegistrationStrategy
+    internal sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
