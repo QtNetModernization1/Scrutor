@@ -86,9 +86,8 @@ namespace Scrutor;
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            var serviceCollection = (IServiceCollection)services;
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
@@ -98,15 +97,15 @@ namespace Scrutor;
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
             }
 
-            serviceCollection.Add(descriptor);
+            services.Add(descriptor);
         }
     }
 }
