@@ -8,6 +8,7 @@ using System.Collections;
 namespace Scrutor;
 
 using IEnumerableOfServiceDescriptor = System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor>;
+using SystemType = System.Type;
 
 public abstract class RegistrationStrategy
 {
@@ -125,12 +126,12 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                serviceCollection.RemoveAll(s => SystemType.Equals(s.ServiceType, descriptor.ServiceType));
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                serviceCollection.RemoveAll(s => SystemType.Equals(s.ImplementationType, descriptor.ImplementationType));
             }
 
             serviceCollection.Add(descriptor);
