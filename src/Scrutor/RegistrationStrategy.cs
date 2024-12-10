@@ -4,7 +4,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace Scrutor
 {
@@ -54,7 +53,7 @@ namespace Scrutor
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (!services.Any(s => s.ServiceType == descriptor.ServiceType))
+            if (!((IEnumerable<ServiceDescriptor>)services).Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 services.Add(descriptor);
             }
