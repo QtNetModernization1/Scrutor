@@ -52,9 +52,9 @@ public abstract class RegistrationStrategy
     {
         public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
-            if (services is IServiceCollection)
+            if (services is IServiceCollection serviceCollection)
             {
-                ((IServiceCollection)services).TryAdd(descriptor);
+                serviceCollection.TryAdd(descriptor);
             }
             else
             {
