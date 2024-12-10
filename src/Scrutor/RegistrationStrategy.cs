@@ -50,7 +50,7 @@ namespace Scrutor;
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (!services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
@@ -61,7 +61,7 @@ namespace Scrutor;
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             services.Add(descriptor);
         }
@@ -69,7 +69,7 @@ namespace Scrutor;
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
@@ -89,7 +89,7 @@ namespace Scrutor;
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IList<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             var behavior = Behavior;
 
@@ -100,12 +100,24 @@ namespace Scrutor;
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                services.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                for (int i = services.Count - 1; i >= 0; i--)
+                {
+                    if (services[i].ServiceType == descriptor.ServiceType)
+                    {
+                        services.RemoveAt(i);
+                    }
+                }
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                services.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                for (int i = services.Count - 1; i >= 0; i--)
+                {
+                    if (services[i].ImplementationType == descriptor.ImplementationType)
+                    {
+                        services.RemoveAt(i);
+                    }
+                }
             }
 
             services.Add(descriptor);
