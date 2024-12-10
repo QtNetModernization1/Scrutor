@@ -66,15 +66,14 @@ namespace Scrutor;
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
+        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            var serviceCollection = (IServiceCollection)services;
-            if (serviceCollection.Any(s => s.ServiceType == descriptor.ServiceType))
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            serviceCollection.Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
