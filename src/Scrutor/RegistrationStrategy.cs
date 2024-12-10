@@ -50,7 +50,7 @@ public abstract class RegistrationStrategy
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (services is IServiceCollection serviceCollection)
             {
@@ -65,7 +65,7 @@ public abstract class RegistrationStrategy
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (services is IServiceCollection serviceCollection)
             {
@@ -80,7 +80,7 @@ public abstract class RegistrationStrategy
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (services is IServiceCollection serviceCollection)
             {
@@ -107,7 +107,7 @@ public abstract class RegistrationStrategy
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
+        public override void Apply(IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
             if (services is not IServiceCollection serviceCollection)
             {
