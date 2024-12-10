@@ -111,7 +111,7 @@ public abstract class RegistrationStrategy
 
         public override void Apply(IEnumerableOfServiceDescriptor services, ServiceDescriptor descriptor)
         {
-            if (services is not IServiceCollection serviceCollection)
+            if (services is not System.Collections.Generic.IList<ServiceDescriptor> serviceCollection)
             {
                 throw new ArgumentException("Services must be an instance of IServiceCollection", nameof(services));
             }
@@ -125,12 +125,24 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                serviceCollection.RemoveAll(s => s.ServiceType == descriptor.ServiceType);
+                for (int i = serviceCollection.Count - 1; i >= 0; i--)
+                {
+                    if (serviceCollection[i].ServiceType == descriptor.ServiceType)
+                    {
+                        serviceCollection.RemoveAt(i);
+                    }
+                }
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                serviceCollection.RemoveAll(s => s.ImplementationType == descriptor.ImplementationType);
+                for (int i = serviceCollection.Count - 1; i >= 0; i--)
+                {
+                    if (serviceCollection[i].ImplementationType == descriptor.ImplementationType)
+                    {
+                        serviceCollection.RemoveAt(i);
+                    }
+                }
             }
 
             serviceCollection.Add(descriptor);
