@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
 
 namespace Scrutor;
 
@@ -52,7 +51,7 @@ namespace Scrutor;
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((IServiceCollection)services).TryAdd(descriptor);
+            services.TryAdd(descriptor);
         }
     }
 
@@ -68,12 +67,12 @@ namespace Scrutor;
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            if (System.Linq.Enumerable.Any<ServiceDescriptor>((System.Collections.Generic.IEnumerable<ServiceDescriptor>)services, s => s.ServiceType == descriptor.ServiceType))
+            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            ((IServiceCollection)services).Add(descriptor);
+            services.Add(descriptor);
         }
     }
 
