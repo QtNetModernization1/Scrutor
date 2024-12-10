@@ -3,7 +3,6 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Collections;
 
 namespace Scrutor;
 
@@ -63,7 +62,7 @@ namespace Scrutor;
     {
         public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
         {
-            ((ICollection<ServiceDescriptor>)services).Add(descriptor);
+            ((System.Collections.Generic.ICollection<ServiceDescriptor>)services).Add(descriptor);
         }
     }
 
