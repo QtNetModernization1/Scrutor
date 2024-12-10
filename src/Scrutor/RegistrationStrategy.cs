@@ -46,34 +46,35 @@ namespace Scrutor;
         /// </summary>
         /// <param name="services">The service collection.</param>
         /// <param name="descriptor">The descriptor to apply.</param>
-        public abstract void Apply(IServiceCollection services, ServiceDescriptor descriptor);
+        public abstract void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor);
 
     private sealed class SkipRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
-            services.TryAdd(descriptor);
+            ((IServiceCollection)services).TryAdd(descriptor);
         }
     }
 
     private sealed class AppendRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
-            services.Add(descriptor);
+            ((IServiceCollection)services).Add(descriptor);
         }
     }
 
     private sealed class ThrowRegistrationStrategy : RegistrationStrategy
     {
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
-            if (services.Any(s => s.ServiceType == descriptor.ServiceType))
+            var serviceCollection = (IServiceCollection)services;
+            if (serviceCollection.Any(s => s.ServiceType == descriptor.ServiceType))
             {
                 throw new DuplicateTypeRegistrationException(descriptor.ServiceType);
             }
 
-            services.Add(descriptor);
+            serviceCollection.Add(descriptor);
         }
     }
 
@@ -86,9 +87,9 @@ namespace Scrutor;
 
         private ReplacementBehavior Behavior { get; }
 
-        public override void Apply(IServiceCollection services, ServiceDescriptor descriptor)
+        public override void Apply(System.Collections.Generic.IEnumerable<ServiceDescriptor> services, ServiceDescriptor descriptor)
         {
-
+            var serviceCollection = (IServiceCollection)services;
             var behavior = Behavior;
 
             if (behavior == ReplacementBehavior.Default)
