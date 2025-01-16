@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
-using System.ComponentModel;
 
 namespace Scrutor;
 
@@ -43,7 +42,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
     {
         if (!Enum.IsDefined(typeof(ServiceLifetime), lifetime))
         {
-            throw new InvalidEnumArgumentException(nameof(lifetime), (int)lifetime, typeof(ServiceLifetime));
+            throw new ArgumentException($"The value of argument '{nameof(lifetime)}' ({lifetime}) is invalid for Enum type '{nameof(ServiceLifetime)}'.", nameof(lifetime));
         }
 
         Inner.PropagateLifetime(lifetime);
