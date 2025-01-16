@@ -1,5 +1,6 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -235,7 +236,7 @@ public static partial class ServiceCollectionExtensions
     }
 
     /// <summary>
-    /// Decorates all registered services using the specified <paramref name="strategy"/>.
+/// Decorates all registered services using the specified <paramref name="strategy"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <param name="strategy">The strategy for decorating services.</param>
@@ -257,7 +258,7 @@ public static partial class ServiceCollectionExtensions
 
             if (!strategy.CanDecorate(serviceDescriptor.ServiceType))
             {
-                continue; // Unable to decorate using the specified strategy.
+continue; // Unable to decorate using the specified strategy.
             }
 
             var decoratedType = new DecoratedType(serviceDescriptor.ServiceType);
@@ -272,5 +273,19 @@ public static partial class ServiceCollectionExtensions
         }
 
         return decorated;
+    }
+}
+
+// Helper extension method to avoid using ICollection<> directly
+public static class ServiceDescriptorExtensions
+{
+    public static ServiceDescriptor WithServiceType(this ServiceDescriptor descriptor, Type serviceType)
+    {
+        return new ServiceDescriptor(serviceType, descriptor.ImplementationType, descriptor.Lifetime);
+    }
+
+    public static ServiceDescriptor WithImplementationFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> factory)
+    {
+        return new ServiceDescriptor(descriptor.ServiceType, factory, descriptor.Lifetime);
     }
 }
