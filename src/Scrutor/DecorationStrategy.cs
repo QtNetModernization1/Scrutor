@@ -1,43 +1,43 @@
 using System;
-using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Scrutor;
 
 public abstract class DecorationStrategy
 {
-    protected DecorationStrategy(Type serviceType)
+    protected DecorationStrategy(System.Type serviceType)
     {
         ServiceType = serviceType;
     }
 
-    protected static T GetRequiredService<T>(IServiceProvider serviceProvider) => (T)serviceProvider.GetService(typeof(T)) ?? throw new InvalidOperationException($"Failed to resolve service of type {typeof(T)}");
-    
-    public Type ServiceType { get; }
-    
-    public abstract bool CanDecorate(Type serviceType);
-    
-    public abstract Func<IServiceProvider, object> CreateDecorator(Type serviceType);
-    
-    internal static DecorationStrategy WithType(Type serviceType, Type decoratorType) => 
+    protected static T GetRequiredService<T>(System.IServiceProvider serviceProvider) => (T)serviceProvider.GetService(typeof(T)) ?? throw new System.InvalidOperationException($"Failed to resolve service of type {typeof(T)}");
+
+    public System.Type ServiceType { get; }
+
+    public abstract bool CanDecorate(System.Type serviceType);
+
+    public abstract System.Func<System.IServiceProvider, System.Object> CreateDecorator(System.Type serviceType);
+
+    internal static DecorationStrategy WithType(System.Type serviceType, System.Type decoratorType) =>
         Create(serviceType, decoratorType, decoratorFactory: null);
 
-    internal static DecorationStrategy WithFactory(Type serviceType, Func<object, IServiceProvider, object> decoratorFactory) => 
+    internal static DecorationStrategy WithFactory(System.Type serviceType, System.Func<System.Object, System.IServiceProvider, System.Object> decoratorFactory) =>
         Create(serviceType, decoratorType: null, decoratorFactory);
-    
-    protected static Func<IServiceProvider, object> TypeDecorator(Type serviceType, Type decoratorType) => serviceProvider =>
+
+    protected static System.Func<System.IServiceProvider, System.Object> TypeDecorator(System.Type serviceType, System.Type decoratorType) => serviceProvider =>
     {
         var instanceToDecorate = serviceProvider.GetRequiredService(serviceType);
         return ActivatorUtilities.CreateInstance(serviceProvider, decoratorType, instanceToDecorate);
     };
 
-    protected static Func<IServiceProvider, object> FactoryDecorator(Type decorated, Func<object, IServiceProvider, object> decoratorFactory) => serviceProvider =>
+    protected static System.Func<System.IServiceProvider, System.Object> FactoryDecorator(System.Type decorated, System.Func<System.Object, System.IServiceProvider, System.Object> decoratorFactory) => serviceProvider =>
     {
-        var instanceToDecorate = GetRequiredService<object>(serviceProvider);
+        var instanceToDecorate = GetRequiredService<System.Object>(serviceProvider);
         return decoratorFactory(instanceToDecorate, serviceProvider);
     };
 
-    private static DecorationStrategy Create(Type serviceType, Type? decoratorType, Func<object, IServiceProvider, object>? decoratorFactory)
+    private static DecorationStrategy Create(System.Type serviceType, System.Type? decoratorType, System.Func<System.Object, System.IServiceProvider, System.Object>? decoratorFactory)
     {
         if (serviceType.IsOpenGeneric())
         {
