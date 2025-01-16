@@ -1,4 +1,4 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
 using JetBrains.Annotations;
 
@@ -119,13 +119,13 @@ public static partial class ServiceCollectionExtensions
     /// <exception cref="DecorationException">If no service of <typeparamref name="TService"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>
     /// or <paramref name="decorator"/> arguments are <c>null</c>.</exception>
-    public static IServiceCollection Decorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
-    {
-        Preconditions.NotNull(services, nameof(services));
-        Preconditions.NotNull(decorator, nameof(decorator));
-        
-        return services.Decorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
-    }
+public static IServiceCollection Decorate<TService>(this System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
+{
+    Preconditions.NotNull(services, nameof(services));
+    Preconditions.NotNull(decorator, nameof(decorator));
+
+    return services.Decorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
+}
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
