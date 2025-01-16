@@ -1,5 +1,6 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
 
 namespace Scrutor;
 
@@ -9,6 +10,8 @@ public abstract class DecorationStrategy
     {
         ServiceType = serviceType;
     }
+
+    protected static T GetRequiredService<T>(IServiceProvider serviceProvider) => (T)serviceProvider.GetService(typeof(T)) ?? throw new InvalidOperationException($"Failed to resolve service of type {typeof(T)}");
     
     public Type ServiceType { get; }
     
@@ -30,7 +33,7 @@ public abstract class DecorationStrategy
 
     protected static Func<IServiceProvider, object> FactoryDecorator(Type decorated, Func<object, IServiceProvider, object> decoratorFactory) => serviceProvider =>
     {
-        var instanceToDecorate = serviceProvider.GetRequiredService(decorated);
+        var instanceToDecorate = GetRequiredService<object>(serviceProvider);
         return decoratorFactory(instanceToDecorate, serviceProvider);
     };
 
