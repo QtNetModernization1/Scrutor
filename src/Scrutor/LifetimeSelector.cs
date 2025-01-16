@@ -6,8 +6,6 @@ using Microsoft.Extensions.DependencyModel;
 
 namespace Scrutor;
 
-using System;
-
 internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 {
     public LifetimeSelector(ServiceTypeSelector inner, IEnumerable<TypeMap> typeMaps, IEnumerable<TypeFactoryMap> typeFactoryMaps)
