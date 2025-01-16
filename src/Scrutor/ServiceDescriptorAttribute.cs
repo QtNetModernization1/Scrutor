@@ -1,8 +1,7 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
-using System.Runtime.Versioning;
 
 namespace Scrutor;
 
@@ -22,11 +21,7 @@ public class ServiceDescriptorAttribute : Attribute
 
     public Type? ServiceType { get; }
 
-public ServiceLifetime Lifetime { get; }
-
-[SupportedOSPlatform("windows")]
-[SupportedOSPlatform("linux")]
-[SupportedOSPlatform("macOS")]
+    public ServiceLifetime Lifetime { get; }
 
     public IEnumerable<Type> GetServiceTypes(Type fallbackType)
     {
