@@ -1,6 +1,5 @@
-using Scrutor;
+﻿using Scrutor;
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -54,7 +53,7 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(serviceType, nameof(serviceType));
         Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
-        return services.Decorate(new DecorationStrategy(serviceType, decoratorType));
+        return services.Decorate(DecorationStrategy.WithType(serviceType, decoratorType));
     }
 
     /// <summary>
@@ -72,7 +71,7 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(serviceType, nameof(serviceType));
         Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
-        return services.TryDecorate(new DecorationStrategy(serviceType, decoratorType));
+        return services.TryDecorate(DecorationStrategy.WithType(serviceType, decoratorType));
     }
     
     /// <summary>
