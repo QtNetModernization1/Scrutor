@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
+using System.Runtime.InteropServices;
 
 namespace Scrutor;
 
@@ -37,7 +38,7 @@ internal class AttributeSelector : ISelector
 
                 foreach (var serviceType in serviceTypes)
                 {
-                    var descriptor = new ServiceDescriptor(serviceType, type, attribute.Lifetime);
+                    var descriptor = new ServiceDescriptor(serviceType, type as System.Type, attribute.Lifetime);
 
                     strategy.Apply(services, descriptor);
                 }
