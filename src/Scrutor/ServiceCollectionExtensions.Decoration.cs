@@ -1,5 +1,6 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -140,8 +141,13 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(decorator, nameof(decorator));
-        
+
         return services.TryDecorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
+    }
+
+    private static IEnumerable<T> AsEnumerable<T>(this T item)
+    {
+        yield return item;
     }
     
     /// <summary>
