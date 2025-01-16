@@ -12,22 +12,22 @@ public abstract class DecorationStrategy
     }
 
     protected static T GetRequiredService<T>(IServiceProvider serviceProvider) => (T)serviceProvider.GetService(typeof(T)) ?? throw new InvalidOperationException($"Failed to resolve service of type {typeof(T)}");
-
+    
     public Type ServiceType { get; }
-
+    
     public abstract bool CanDecorate(Type serviceType);
-
+    
     public abstract Func<IServiceProvider, object> CreateDecorator(Type serviceType);
-
-    internal static DecorationStrategy WithType(Type serviceType, Type decoratorType) =>
+    
+    internal static DecorationStrategy WithType(Type serviceType, Type decoratorType) => 
         Create(serviceType, decoratorType, decoratorFactory: null);
 
-    internal static DecorationStrategy WithFactory(Type serviceType, Func<object, IServiceProvider, object> decoratorFactory) =>
+    internal static DecorationStrategy WithFactory(Type serviceType, Func<object, IServiceProvider, object> decoratorFactory) => 
         Create(serviceType, decoratorType: null, decoratorFactory);
-
+    
     protected static Func<IServiceProvider, object> TypeDecorator(Type serviceType, Type decoratorType) => serviceProvider =>
     {
-        var instanceToDecorate = GetRequiredService<object>(serviceProvider.GetService(serviceType));
+        var instanceToDecorate = serviceProvider.GetRequiredService(serviceType);
         return ActivatorUtilities.CreateInstance(serviceProvider, decoratorType, instanceToDecorate);
     };
 
