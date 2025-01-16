@@ -1,6 +1,5 @@
-using Scrutor;
+﻿using Scrutor;
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -122,9 +121,9 @@ public static partial class ServiceCollectionExtensions
     /// or <paramref name="decorator"/> arguments are <c>null</c>.</exception>
     public static IServiceCollection Decorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
     {
-        if (services == null) throw new ArgumentNullException(nameof(services));
-        if (decorator == null) throw new ArgumentNullException(nameof(decorator));
-
+        Preconditions.NotNull(services, nameof(services));
+        Preconditions.NotNull(decorator, nameof(decorator));
+        
         return services.Decorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
     }
 
