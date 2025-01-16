@@ -1,11 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
-
-// Explicitly import System namespace to ensure Enum is available
-using System;
 
 namespace Scrutor;
 
