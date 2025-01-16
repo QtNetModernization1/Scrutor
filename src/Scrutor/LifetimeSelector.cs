@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,7 +40,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
     {
-        Preconditions.IsDefined(lifetime!, nameof(lifetime));
+        Preconditions.IsDefined(lifetime, nameof(lifetime));
 
         Inner.PropagateLifetime(lifetime);
 
