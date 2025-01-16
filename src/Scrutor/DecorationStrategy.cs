@@ -1,6 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Scrutor;
 
@@ -11,7 +12,8 @@ public abstract class DecorationStrategy
         ServiceType = serviceType;
     }
 
-    protected static T GetRequiredService<T>(IServiceProvider serviceProvider) => (T)serviceProvider.GetService(typeof(T)) ?? throw new InvalidOperationException($"Failed to resolve service of type {typeof(T)}");
+    [return: NotNull]
+    protected static T GetRequiredService<T>(IServiceProvider serviceProvider) => (T)(serviceProvider.GetService(typeof(T)) ?? throw new InvalidOperationException($"Failed to resolve service of type {typeof(T)}"));
     
     public Type ServiceType { get; }
     
