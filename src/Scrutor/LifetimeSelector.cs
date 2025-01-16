@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,24 +25,24 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     public IImplementationTypeSelector WithSingletonLifetime()
     {
-        return WithLifetime((ServiceLifetime)(System.Enum.ToObject(typeof(ServiceLifetime), ServiceLifetime.Singleton)));
+        return WithLifetime(ServiceLifetime.Singleton);
     }
 
     public IImplementationTypeSelector WithScopedLifetime()
     {
-        return WithLifetime((ServiceLifetime)(System.Enum.ToObject(typeof(ServiceLifetime), ServiceLifetime.Scoped)));
+        return WithLifetime(ServiceLifetime.Scoped);
     }
 
     public IImplementationTypeSelector WithTransientLifetime()
     {
-        return WithLifetime((ServiceLifetime)(System.Enum.ToObject(typeof(ServiceLifetime), ServiceLifetime.Transient)));
+        return WithLifetime(ServiceLifetime.Transient);
     }
 
     public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
     {
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
-        Inner.PropagateLifetime((System.Enum)(object)lifetime);
+        Inner.PropagateLifetime(lifetime);
 
         return this;
     }
