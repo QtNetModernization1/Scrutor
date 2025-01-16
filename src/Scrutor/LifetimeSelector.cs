@@ -40,7 +40,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
     {
-        if (!System.Enum.IsDefined(typeof(ServiceLifetime), lifetime))
+        if (!Enum.IsDefined(typeof(ServiceLifetime), lifetime))
         {
             throw new ArgumentException($"The value of argument '{nameof(lifetime)}' ({lifetime}) is invalid for Enum type '{nameof(ServiceLifetime)}'.", nameof(lifetime));
         }
