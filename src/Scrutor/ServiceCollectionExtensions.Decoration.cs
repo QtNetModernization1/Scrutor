@@ -1,5 +1,6 @@
 using Scrutor;
 using System;
+using System.Linq;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -246,7 +247,7 @@ public static partial class ServiceCollectionExtensions
 
         var decorated = false;
 
-        for (var i = services.Count - 1; i >= 0; i--)
+        for (var i = services.Count() - 1; i >= 0; i--)
         {
             var serviceDescriptor = services[i];
 
