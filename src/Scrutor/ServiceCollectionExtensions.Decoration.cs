@@ -1,5 +1,6 @@
 using Scrutor;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 
@@ -19,7 +20,10 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        Preconditions.NotNull(services, nameof(services));
+        if (services == null)
+        {
+            throw new ArgumentNullException(nameof(services));
+        }
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
     }
