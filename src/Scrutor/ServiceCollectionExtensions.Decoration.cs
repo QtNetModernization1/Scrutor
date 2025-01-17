@@ -40,7 +40,7 @@ public static partial class ServiceCollectionExtensions
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
 
-    private static IEnumerable<T> AsEnumerable<T>(this IServiceCollection services) => services.Cast<T>();
+    private static System.Collections.Generic.IEnumerable<T> AsEnumerable<T>(this IServiceCollection services) => services.Cast<T>();
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
