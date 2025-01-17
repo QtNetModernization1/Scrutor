@@ -3,9 +3,11 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using System.Collections;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
+
 
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
@@ -40,6 +42,9 @@ public static partial class ServiceCollectionExtensions
     }
 
     private static IEnumerable<T> AsEnumerable<T>(this IServiceCollection services) => services.Cast<T>();
+
+    // Add this method to ensure IEnumerable<T> is available
+    private static IEnumerable<T> EnsureEnumerable<T>(this IEnumerable<T> source) => source;
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
