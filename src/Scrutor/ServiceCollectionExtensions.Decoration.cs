@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
-using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
