@@ -59,5 +59,5 @@ public sealed class ServiceDescriptorAttribute<TService> : ServiceDescriptorAttr
 {
     public ServiceDescriptorAttribute() : base(typeof(TService)) { }
 
-    public ServiceDescriptorAttribute(ServiceLifetime lifetime) : base(typeof(TService), lifetime) { }
+public ServiceDescriptorAttribute(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime) : base(typeof(TService), lifetime) { }
 }
