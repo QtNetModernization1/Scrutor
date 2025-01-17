@@ -55,9 +55,9 @@ public class ServiceDescriptorAttribute : Attribute
 
 [PublicAPI]
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
-public sealed class ServiceDescriptorAttribute<TService> : ServiceDescriptorAttribute
+public sealed class ServiceDescriptorAttribute<TService> : ServiceDescriptorAttribute where TService : class
 {
     public ServiceDescriptorAttribute() : base(typeof(TService)) { }
 
-    public ServiceDescriptorAttribute(ServiceLifetime lifetime) : base(typeof(TService), lifetime) { }
+    public ServiceDescriptorAttribute(System.Enum lifetime) : base(typeof(TService), (Microsoft.Extensions.DependencyInjection.ServiceLifetime)lifetime) { }
 }
