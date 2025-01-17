@@ -1,4 +1,4 @@
-﻿using Scrutor;
+using Scrutor;
 using System;
 using JetBrains.Annotations;
 
@@ -10,12 +10,12 @@ public static partial class ServiceCollectionExtensions
 {
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-    /// using the specified type <typeparamref name="TDecorator"/>.
+/// using the specified type <typeparamref name="TDecorator"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="DecorationException">If no service of the type <typeparamref name="TService"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
+    public static System.Collections.Generic.ICollection<ServiceDescriptor> Decorate<TService, TDecorator>(this System.Collections.Generic.ICollection<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
