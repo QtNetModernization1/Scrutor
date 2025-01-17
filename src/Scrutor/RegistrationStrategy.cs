@@ -1,6 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Scrutor;
 
@@ -88,27 +89,26 @@ public abstract class RegistrationStrategy
 
             if (behavior.HasFlag(ReplacementBehavior.ServiceType))
             {
-                for (var i = services.Count - 1; i >= 0; i--)
-                {
-                    if (services[i].ServiceType == descriptor.ServiceType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                RemoveServices(services, s => s.ServiceType == descriptor.ServiceType);
             }
 
             if (behavior.HasFlag(ReplacementBehavior.ImplementationType))
             {
-                for (var i = services.Count - 1; i >= 0; i--)
-                {
-                    if (services[i].ImplementationType == descriptor.ImplementationType)
-                    {
-                        services.RemoveAt(i);
-                    }
-                }
+                RemoveServices(services, s => s.ImplementationType == descriptor.ImplementationType);
             }
 
             services.Add(descriptor);
+        }
+
+        private static void RemoveServices(IServiceCollection services, Func<ServiceDescriptor, bool> predicate)
+        {
+            for (var i = services.Count - 1; i >= 0; i--)
+            {
+                if (predicate(services[i]))
+                {
+                    services.RemoveAt(i);
+                }
+            }
         }
     }
 }
