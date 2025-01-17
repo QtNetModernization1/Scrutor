@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,9 +11,9 @@ public class ServiceDescriptorAttribute : Attribute
 {
     public ServiceDescriptorAttribute() : this(null) { }
 
-    public ServiceDescriptorAttribute(Type? serviceType) : this(serviceType, ServiceLifetime.Transient) { }
+    public ServiceDescriptorAttribute(Type? serviceType) : this(serviceType, Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient) { }
 
-    public ServiceDescriptorAttribute(Type? serviceType, ServiceLifetime lifetime)
+    public ServiceDescriptorAttribute(Type? serviceType, Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
     {
         ServiceType = serviceType;
         Lifetime = lifetime;
@@ -21,7 +21,7 @@ public class ServiceDescriptorAttribute : Attribute
 
     public Type? ServiceType { get; }
 
-    public ServiceLifetime Lifetime { get; }
+    public Microsoft.Extensions.DependencyInjection.ServiceLifetime Lifetime { get; }
 
     public IEnumerable<Type> GetServiceTypes(Type fallbackType)
     {
