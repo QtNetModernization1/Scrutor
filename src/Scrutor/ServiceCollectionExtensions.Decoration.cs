@@ -1,6 +1,7 @@
 using Scrutor;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -37,6 +38,8 @@ public static partial class ServiceCollectionExtensions
 
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
+
+    private static IEnumerable<T> AsEnumerable<T>(this IServiceCollection services) => services.Cast<T>();
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
