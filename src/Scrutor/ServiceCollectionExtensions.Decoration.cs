@@ -1,11 +1,9 @@
 using Scrutor;
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
-
 
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
@@ -259,7 +257,7 @@ public static partial class ServiceCollectionExtensions
 
             if (!strategy.CanDecorate(serviceDescriptor.ServiceType))
             {
-continue; // Unable to decorate using the specified strategy.
+                continue; // Unable to decorate using the specified strategy.
             }
 
             var decoratedType = new DecoratedType(serviceDescriptor.ServiceType);
@@ -274,16 +272,5 @@ continue; // Unable to decorate using the specified strategy.
         }
 
         return decorated;
-    }
-
-    private static class Preconditions
-    {
-        public static void NotNull<T>(T value, string parameterName) where T : class
-        {
-            if (value == null)
-            {
-                throw new ArgumentNullException(parameterName);
-            }
-        }
     }
 }
