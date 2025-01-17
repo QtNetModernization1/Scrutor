@@ -7,7 +7,7 @@ namespace Scrutor;
 
 internal static class ServiceCollectionExtensions
 {
-    public static bool HasRegistration(this IEnumerable<ServiceDescriptor> services, Type serviceType)
+    public static bool HasRegistration(this IEnumerable<ServiceDescriptor> services, System.Type serviceType)
     {
         return services.Any(x => x.ServiceType == serviceType);
     }
