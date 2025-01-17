@@ -1,5 +1,6 @@
 using Scrutor;
 using System;
+using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
@@ -18,7 +19,7 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        Preconditions.NotNull(services, nameof(services));
+        if (services == null) throw new ArgumentNullException(nameof(services));
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
     }
@@ -32,7 +33,7 @@ public static partial class ServiceCollectionExtensions
     public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        Preconditions.NotNull(services, nameof(services));
+        if (services == null) throw new ArgumentNullException(nameof(services));
 
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
@@ -49,9 +50,9 @@ public static partial class ServiceCollectionExtensions
     /// <paramref name="serviceType"/> or <paramref name="decoratorType"/> arguments are <c>null</c>.</exception>
     public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
     {
-        Preconditions.NotNull(services, nameof(services));
-        Preconditions.NotNull(serviceType, nameof(serviceType));
-        Preconditions.NotNull(decoratorType, nameof(decoratorType));
+        if (services == null) throw new ArgumentNullException(nameof(services));
+        if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
+        if (decoratorType == null) throw new ArgumentNullException(nameof(decoratorType));
 
         return services.Decorate(DecorationStrategy.WithType(serviceType, decoratorType));
     }
