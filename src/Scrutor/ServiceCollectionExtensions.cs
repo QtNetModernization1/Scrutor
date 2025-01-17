@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Scrutor;
