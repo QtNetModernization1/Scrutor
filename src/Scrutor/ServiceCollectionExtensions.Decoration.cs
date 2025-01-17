@@ -1,6 +1,7 @@
 using Scrutor;
 using System;
 using System.Linq;
+using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 
@@ -40,6 +41,12 @@ public static partial class ServiceCollectionExtensions
     }
 
     private static IEnumerable<T> AsEnumerable<T>(this IServiceCollection services) => services.Cast<T>();
+
+    // Ensure IList<T> is recognized
+    private static void EnsureIListIsRecognized<T>()
+    {
+        IList<T> list = new List<T>();
+    }
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
