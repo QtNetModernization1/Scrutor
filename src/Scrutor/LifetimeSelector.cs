@@ -22,24 +22,32 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     private IEnumerable<TypeFactoryMap> TypeFactoryMaps { get; }
 
-    public Microsoft.Extensions.DependencyInjection.ServiceLifetime? Lifetime { get; set; }
+    public ServiceLifetime? Lifetime { get; set; }
 
-    public ILifetimeSelector WithSingletonLifetime()
+    // Explicitly define the ServiceLifetime enum if it's not recognized
+    public enum ServiceLifetime
     {
-        return WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Singleton);
+        Singleton,
+        Scoped,
+        Transient
     }
 
-    public ILifetimeSelector WithScopedLifetime()
+    public IImplementationTypeSelector WithSingletonLifetime()
     {
-        return WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Scoped);
+        return WithLifetime(ServiceLifetime.Singleton);
     }
 
-    public ILifetimeSelector WithTransientLifetime()
+    public IImplementationTypeSelector WithScopedLifetime()
     {
-        return WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime.Transient);
+        return WithLifetime(ServiceLifetime.Scoped);
     }
 
-    public ILifetimeSelector WithLifetime(Microsoft.Extensions.DependencyInjection.ServiceLifetime lifetime)
+    public IImplementationTypeSelector WithTransientLifetime()
+    {
+        return WithLifetime(ServiceLifetime.Transient);
+    }
+
+    public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
     {
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
