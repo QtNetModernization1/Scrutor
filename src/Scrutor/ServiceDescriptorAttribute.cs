@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
@@ -59,5 +59,5 @@ public sealed class ServiceDescriptorAttribute<TService> : ServiceDescriptorAttr
 {
     public ServiceDescriptorAttribute() : base(typeof(TService)) { }
 
-    public ServiceDescriptorAttribute(System.Enum lifetime) : base(typeof(TService), (ServiceLifetime)lifetime) { }
+    public ServiceDescriptorAttribute(ServiceLifetime lifetime) : base(typeof(TService), lifetime) { }
 }
