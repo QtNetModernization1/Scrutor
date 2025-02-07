@@ -47,7 +47,7 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
         return WithLifetime(ServiceLifetime.Transient);
     }
 
-    public IImplementationTypeSelector WithLifetime(ServiceLifetime lifetime)
+    public ILifetimeSelector WithLifetime(ServiceLifetime lifetime)
     {
         Preconditions.IsDefined(lifetime, nameof(lifetime));
 
