@@ -1,8 +1,9 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
+using System.Runtime.Serialization;
 
 namespace Scrutor;
 
@@ -22,6 +23,14 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
     private IEnumerable<TypeFactoryMap> TypeFactoryMaps { get; }
 
     public ServiceLifetime? Lifetime { get; set; }
+
+    // Explicitly define the ServiceLifetime enum if it's not recognized
+    public enum ServiceLifetime
+    {
+        Singleton,
+        Scoped,
+        Transient
+    }
 
     public IImplementationTypeSelector WithSingletonLifetime()
     {
