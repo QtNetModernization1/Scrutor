@@ -5,7 +5,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -95,12 +94,6 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(decorator, nameof(decorator));
 
         return services.Decorate<TService>((service, _) => decorator(service));
-    }
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static TService DecorateService<TService>(TService service, IServiceProvider _) where TService : notnull
-    {
-        return service;
     }
 
     /// <summary>
