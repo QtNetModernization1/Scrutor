@@ -228,53 +228,58 @@ public static partial class ServiceCollectionExtensions
     /// <param name="services">The services to add to.</param>
     /// <param name="strategy">The strategy for decorating services.</param>
     /// <exception cref="DecorationException">If no registered service matched the specified <paramref name="strategy"/>.</exception>
-    public static IServiceCollection Decorate(this IServiceCollection services, DecorationStrategy strategy)
+public static IServiceCollection Decorate(this IServiceCollection services, DecorationStrategy strategy)
+{
+    if (services.TryDecorate(strategy))
     {
-        if (services.TryDecorate(strategy))
-        {
-            return services;
-        }
-
-        throw new DecorationException(strategy);
+        return services;
     }
 
-    /// <summary>
-    /// Decorates all registered services using the specified <paramref name="strategy"/>.
-    /// </summary>
-    /// <param name="services">The services to add to.</param>
-    /// <param name="strategy">The strategy for decorating services.</param>
-    public static bool TryDecorate(this IServiceCollection services, DecorationStrategy strategy)
+    throw new DecorationException(strategy);
+}
+
+/// <summary>
+/// Decorates all registered services using the specified <paramref name="strategy"/>.
+/// </summary>
+/// <param name="services">The services to add to.</param>
+/// <param name="strategy">The strategy for decorating services.</param>
+public static bool TryDecorate(this IServiceCollection services, DecorationStrategy strategy)
+{
+    Preconditions.NotNull(services, nameof(services));
+    Preconditions.NotNull(strategy, nameof(strategy));
+
+    var decorated = false;
+
+    for (var i = services.Count - 1; i >= 0; i--)
     {
-        Preconditions.NotNull(services, nameof(services));
-        Preconditions.NotNull(strategy, nameof(strategy));
+        var serviceDescriptor = services[i];
 
-        var decorated = false;
-
-        for (var i = services.Count - 1; i >= 0; i--)
+        if (serviceDescriptor.ServiceType is DecoratedType)
         {
-            var serviceDescriptor = services[i];
-
-            if (serviceDescriptor.ServiceType is DecoratedType)
-            {
-                continue; // Service has already been decorated.
-            }
-
-            if (!strategy.CanDecorate(serviceDescriptor.ServiceType))
-            {
-                continue; // Unable to decorate using the specified strategy.
-            }
-
-            var decoratedType = new DecoratedType(serviceDescriptor.ServiceType);
-
-            // Insert decorated
-            services.Add(serviceDescriptor.WithServiceType(decoratedType));
-
-            // Replace decorator
-            services[i] = serviceDescriptor.WithImplementationFactory(strategy.CreateDecorator(decoratedType));
-
-            decorated = true;
+            continue; // Service has already been decorated.
         }
 
-        return decorated;
+        if (!strategy.CanDecorate(serviceDescriptor.ServiceType))
+        {
+continue; // Unable to decorate using the specified strategy.
+        }
+
+        var decoratedType = new DecoratedType(serviceDescriptor.ServiceType);
+
+        // Insert decorated
+        services.Add(serviceDescriptor.WithServiceType(decoratedType));
+
+        // Replace decorator
+        services[i] = serviceDescriptor.WithImplementationFactory(strategy.CreateDecorator(decoratedType));
+
+        decorated = true;
     }
+
+    return decorated;
+}
+
+public static System.Collections.Generic.IEnumerable<ServiceDescriptor> WithImplementationFactory(this ServiceDescriptor descriptor, Func<IServiceProvider, object> implementationFactory)
+{
+    return new[] { new ServiceDescriptor(descriptor.ServiceType, implementationFactory, descriptor.Lifetime) };
+}
 }
