@@ -24,14 +24,6 @@ internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
 
     public ServiceLifetime? Lifetime { get; set; }
 
-    // Explicitly define the ServiceLifetime enum if it's not recognized
-    public enum ServiceLifetime
-    {
-        Singleton,
-        Scoped,
-        Transient
-    }
-
     public IImplementationTypeSelector WithSingletonLifetime()
     {
         return WithLifetime(ServiceLifetime.Singleton);
