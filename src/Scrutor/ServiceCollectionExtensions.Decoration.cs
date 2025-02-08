@@ -5,6 +5,10 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections;
+#if NETSTANDARD2_0
+using System.Runtime.CompilerServices;
+[assembly: TypeForwardedTo(typeof(System.Collections.Generic.ICollection<>))]
+#endif
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
