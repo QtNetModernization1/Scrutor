@@ -100,7 +100,7 @@ public static partial class ServiceCollectionExtensions
         Preconditions.NotNull(decorator, nameof(decorator));
 
         // Implementation details...
-        return services as IServiceCollection ?? throw new InvalidOperationException("Unable to cast services to IServiceCollection");
+        return services as System.Collections.Generic.ICollection<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> ?? throw new InvalidOperationException("Unable to cast services to IServiceCollection");
     }
 
     /// <summary>
