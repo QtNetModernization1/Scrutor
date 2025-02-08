@@ -17,13 +17,13 @@ public static partial class ServiceCollectionExtensions
     /// <param name="services">The services to add to.</param>
     /// <exception cref="DecorationException">If no service of the type <typeparamref name="TService"/> has been registered.</exception>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
-        where TDecorator : TService
-    {
-        Preconditions.NotNull(services, nameof(services));
+public static IServiceCollection Decorate<TService, TDecorator>(this System.Collections.Generic.IEnumerable<ServiceDescriptor> services)
+    where TDecorator : TService
+{
+    Preconditions.NotNull(services, nameof(services));
 
-        return services.Decorate(typeof(TService), typeof(TDecorator));
-    }
+    return services.Decorate(typeof(TService), typeof(TDecorator));
+}
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
@@ -31,13 +31,13 @@ public static partial class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
-        where TDecorator : TService
-    {
-        Preconditions.NotNull(services, nameof(services));
+public static bool TryDecorate<TService, TDecorator>(this System.Collections.Generic.IEnumerable<ServiceDescriptor> services)
+    where TDecorator : TService
+{
+    Preconditions.NotNull(services, nameof(services));
 
-        return services.TryDecorate(typeof(TService), typeof(TDecorator));
-    }
+    return services.TryDecorate(typeof(TService), typeof(TDecorator));
+}
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
