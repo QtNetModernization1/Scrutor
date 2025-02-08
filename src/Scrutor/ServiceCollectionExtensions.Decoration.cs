@@ -95,18 +95,9 @@ public static partial class ServiceCollectionExtensions
         return services.Decorate<TService>((service, _) => decorator(service));
     }
 
-    public static IServiceCollection Decorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
-    {
-        Preconditions.NotNull(services, nameof(services));
-        Preconditions.NotNull(decorator, nameof(decorator));
-
-        // Implementation details...
-        return services;
-    }
-
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-    /// using the <paramref name="decorator"/> function.
+/// using the <paramref name="decorator"/> function.
     /// </summary>
     /// <typeparam name="TService">The type of services to decorate.</typeparam>
     /// <param name="services">The services to add to.</param>
@@ -123,7 +114,7 @@ public static partial class ServiceCollectionExtensions
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
-    /// using the <paramref name="decorator"/> function.
+/// using the <paramref name="decorator"/> function.
     /// </summary>
     /// <typeparam name="TService">The type of services to decorate.</typeparam>
     /// <param name="services">The services to add to.</param>
@@ -135,7 +126,7 @@ public static partial class ServiceCollectionExtensions
     {
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(decorator, nameof(decorator));
-        
+
         return services.Decorate(typeof(TService), (service, provider) => decorator((TService)service, provider));
     }
 
