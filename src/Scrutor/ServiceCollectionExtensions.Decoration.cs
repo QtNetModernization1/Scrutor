@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -111,6 +112,8 @@ public static partial class ServiceCollectionExtensions
 
         return services.TryDecorate<TService>((service, _) => decorator(service));
     }
+
+    private static IEnumerable AsEnumerable(this IEnumerable source) => source;
 
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
