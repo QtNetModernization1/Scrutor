@@ -11,7 +11,6 @@ namespace Microsoft.Extensions.DependencyInjection;
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
 {
-    private static readonly Type ICollectionType = typeof(ICollection<>);
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
 /// using the specified type <typeparamref name="TDecorator"/>.
