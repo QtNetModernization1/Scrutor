@@ -5,6 +5,9 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections;
+#if NETSTANDARD2_0
+using System.Collections;
+#endif
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
