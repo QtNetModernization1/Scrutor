@@ -5,10 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyModel;
 using System.Runtime.Serialization;
 
-#if NETSTANDARD2_0
-using System.Enum;
-#endif
-
 namespace Scrutor;
 
 internal sealed class LifetimeSelector : ILifetimeSelector, ISelector
