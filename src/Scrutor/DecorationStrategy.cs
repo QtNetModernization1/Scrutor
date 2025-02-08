@@ -1,8 +1,5 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
-#if NET8_0
-using System.Runtime.InteropServices;
-#endif
 
 namespace Scrutor;
 
@@ -28,11 +25,7 @@ public abstract class DecorationStrategy
     protected static Func<IServiceProvider, object> TypeDecorator(Type serviceType, Type decoratorType) => serviceProvider =>
     {
         var instanceToDecorate = serviceProvider.GetRequiredService(serviceType);
-#if NET8_0
-        return RuntimeHelpers.GetUninitializedObject(decoratorType);
-#else
         return ActivatorUtilities.CreateInstance(serviceProvider, decoratorType, instanceToDecorate);
-#endif
     };
 
     protected static Func<IServiceProvider, object> FactoryDecorator(Type decorated, Func<object, IServiceProvider, object> decoratorFactory) => serviceProvider =>
