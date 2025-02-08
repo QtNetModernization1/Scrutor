@@ -22,10 +22,7 @@ public static partial class ServiceCollectionExtensions
     public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
         where TDecorator : TService
     {
-        if (services == null)
-        {
-            throw new ArgumentNullException(nameof(services));
-        }
+        Preconditions.NotNull(services, nameof(services));
 
         return services.Decorate(typeof(TService), typeof(TDecorator));
     }
