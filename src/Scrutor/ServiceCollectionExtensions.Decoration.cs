@@ -5,7 +5,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -41,9 +40,6 @@ public static partial class ServiceCollectionExtensions
 
         return services.TryDecorate(typeof(TService), typeof(TDecorator));
     }
-
-    // Helper method to ensure IEnumerable<> is recognized
-    private static IEnumerable<T> EnsureEnumerable<T>(IEnumerable<T> source) => source;
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
