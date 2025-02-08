@@ -33,7 +33,7 @@ public static partial class ServiceCollectionExtensions
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <exception cref="ArgumentNullException">If the <paramref name="services"/> argument is <c>null</c>.</exception>
-    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
+    public static bool TryDecorate<TService, TDecorator>(this System.Collections.Generic.ICollection<ServiceDescriptor> services)
         where TDecorator : TService
     {
         Preconditions.NotNull(services, nameof(services));
@@ -43,7 +43,7 @@ public static partial class ServiceCollectionExtensions
 
     /// <summary>
     /// Decorates all registered services of the specified <paramref name="serviceType"/>
-    /// using the specified <paramref name="decoratorType"/>.
+/// using the specified <paramref name="decoratorType"/>.
     /// </summary>
     /// <param name="services">The services to add to.</param>
     /// <param name="serviceType">The type of services to decorate.</param>
