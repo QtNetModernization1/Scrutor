@@ -5,7 +5,6 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 using System.Collections;
-using System.Runtime.CompilerServices;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -70,14 +69,14 @@ public static partial class ServiceCollectionExtensions
     /// <param name="decoratorType">The type to decorate existing services with.</param>
     /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>,
     /// <paramref name="serviceType"/> or <paramref name="decoratorType"/> arguments are <c>null</c>.</exception>
-public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
-{
-    if (services == null) throw new ArgumentNullException(nameof(services));
-    if (serviceType == null) throw new ArgumentNullException(nameof(serviceType));
-    if (decoratorType == null) throw new ArgumentNullException(nameof(decoratorType));
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    {
+        Preconditions.NotNull(services, nameof(services));
+        Preconditions.NotNull(serviceType, nameof(serviceType));
+        Preconditions.NotNull(decoratorType, nameof(decoratorType));
 
-    return services.TryDecorate(DecorationStrategy.WithType(serviceType, decoratorType));
-}
+        return services.TryDecorate(DecorationStrategy.WithType(serviceType, decoratorType));
+    }
     
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
