@@ -5,6 +5,10 @@ using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
 
+#if NET461
+using System.Collections;
+#endif
+
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
 
