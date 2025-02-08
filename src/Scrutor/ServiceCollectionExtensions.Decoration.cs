@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Microsoft.Extensions.DependencyInjection;
+using System.Collections;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -104,7 +105,7 @@ public static partial class ServiceCollectionExtensions
     /// <param name="decorator">The decorator function.</param>
     /// <exception cref="ArgumentNullException">If either the <paramref name="services"/>
     /// or <paramref name="decorator"/> arguments are <c>null</c>.</exception>
-    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, TService> decorator) where TService : class
+    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, TService> decorator) where TService : notnull
     {
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(decorator, nameof(decorator));
