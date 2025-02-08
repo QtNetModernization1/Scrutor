@@ -1,10 +1,8 @@
 using Scrutor;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
-using Microsoft.Extensions.DependencyInjection;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
@@ -96,7 +94,7 @@ public static partial class ServiceCollectionExtensions
         return services.Decorate<TService>((service, _) => decorator(service));
     }
 
-    public static IServiceCollection Decorate<TService>(this IEnumerable<ServiceDescriptor> services, Func<TService, IServiceProvider, TService> decorator) where TService : notnull
+    public static IServiceCollection Decorate<TService>(this System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Func<TService, System.IServiceProvider, TService> decorator) where TService : notnull
     {
         Preconditions.NotNull(services, nameof(services));
         Preconditions.NotNull(decorator, nameof(decorator));
