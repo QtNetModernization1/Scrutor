@@ -94,6 +94,15 @@ public static partial class ServiceCollectionExtensions
         return services.Decorate<TService>((service, _) => decorator(service));
     }
 
+    public static IServiceCollection Decorate<TService>(this System.Collections.Generic.IEnumerable<Microsoft.Extensions.DependencyInjection.ServiceDescriptor> services, Func<TService, System.IServiceProvider, TService> decorator) where TService : notnull
+    {
+        Preconditions.NotNull(services, nameof(services));
+        Preconditions.NotNull(decorator, nameof(decorator));
+
+        // Implementation details...
+        return services as IServiceCollection ?? throw new InvalidOperationException("Unable to cast services to IServiceCollection");
+    }
+
     /// <summary>
     /// Decorates all registered services of type <typeparamref name="TService"/>
     /// using the <paramref name="decorator"/> function.
