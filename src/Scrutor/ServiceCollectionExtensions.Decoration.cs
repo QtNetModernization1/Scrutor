@@ -1,11 +1,9 @@
-using Scrutor;
+﻿using Scrutor;
 using System;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 
 // ReSharper disable once CheckNamespace
 namespace Microsoft.Extensions.DependencyInjection;
-
 
 [PublicAPI]
 public static partial class ServiceCollectionExtensions
