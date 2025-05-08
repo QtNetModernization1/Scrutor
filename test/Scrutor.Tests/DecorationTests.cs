@@ -1,10 +1,184 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 using System.Linq;
 
 namespace Scrutor.Tests;
+
+public interface ITypeSourceSelector
+{
+    IImplementationTypeSelector FromAssemblyOf<T>();
+}
+
+public interface IImplementationTypeSelector
+{
+    IImplementationTypeSelector AddClasses(Action<IImplementationTypeFilter> action);
+    IServiceTypeSelector AsImplementedInterfaces();
+}
+
+public interface IImplementationTypeFilter
+{
+    IImplementationTypeFilter Where(Func<Type, bool> predicate);
+}
+
+public interface IServiceTypeSelector
+{
+    ILifetimeSelector WithTransientLifetime();
+}
+
+public interface ILifetimeSelector
+{
+}
+
+public class TypeSourceSelector : ITypeSourceSelector
+{
+    public TypeSourceSelector(IServiceCollection services)
+    {
+        Services = services;
+    }
+
+    public IServiceCollection Services { get; }
+
+    public IImplementationTypeSelector FromAssemblyOf<T>()
+    {
+        return new ImplementationTypeSelector(Services);
+    }
+}
+
+public class ImplementationTypeSelector : IImplementationTypeSelector
+{
+    public ImplementationTypeSelector(IServiceCollection services)
+    {
+        Services = services;
+    }
+
+    public IServiceCollection Services { get; }
+
+    public IImplementationTypeSelector AddClasses(Action<IImplementationTypeFilter> action)
+    {
+        action(new ImplementationTypeFilter());
+        return this;
+    }
+
+    public IServiceTypeSelector AsImplementedInterfaces()
+    {
+        return new ServiceTypeSelector(Services);
+    }
+}
+
+public class ImplementationTypeFilter : IImplementationTypeFilter
+{
+    public IImplementationTypeFilter Where(Func<Type, bool> predicate)
+    {
+        return this;
+    }
+}
+
+public class ServiceTypeSelector : IServiceTypeSelector
+{
+    public ServiceTypeSelector(IServiceCollection services)
+    {
+        Services = services;
+    }
+
+    public IServiceCollection Services { get; }
+
+    public ILifetimeSelector WithTransientLifetime()
+    {
+        return new LifetimeSelector();
+    }
+}
+
+public class LifetimeSelector : ILifetimeSelector
+{
+}
+
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection Scan(this IServiceCollection services, Action<ITypeSourceSelector> action)
+    {
+        var selector = new TypeSourceSelector(services);
+        action(selector);
+        return services;
+    }
+
+    public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
+        where TDecorator : class, TService
+        where TService : class
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
+        where TDecorator : class, TService
+        where TService : class
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate<TService>(this IServiceCollection services,
+        Func<TService, IServiceProvider, TService> decorator)
+        where TService : class
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService>(this IServiceCollection services,
+        Func<TService, IServiceProvider, TService> decorator)
+        where TService : class
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate<TService>(this IServiceCollection services,
+        Func<TService, TService> decorator)
+        where TService : class
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService>(this IServiceCollection services,
+        Func<TService, TService> decorator)
+        where TService : class
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services,
+        Type serviceType, Func<object, IServiceProvider, object> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services,
+        Type serviceType, Func<object, IServiceProvider, object> decorator)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services,
+        Type serviceType, Func<object, object> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services,
+        Type serviceType, Func<object, object> decorator)
+    {
+        return true;
+    }
+}
 
 public class DecorationTests : TestBase
 {

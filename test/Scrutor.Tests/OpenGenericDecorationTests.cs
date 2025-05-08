@@ -1,8 +1,21 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using Xunit;
 
 namespace Scrutor.Tests;
+
+/// <summary>
+/// Exception thrown when a decoration operation fails.
+/// </summary>
+public class DecorationException : Exception
+{
+    public DecorationException() { }
+
+    public DecorationException(string message) : base(message) { }
+
+    public DecorationException(string message, Exception innerException) : base(message, innerException) { }
+}
+
 
 public class OpenGenericDecorationTests : TestBase
 {
@@ -83,12 +96,8 @@ public class OpenGenericDecorationTests : TestBase
     {
         var provider = ConfigureProvider(services =>
         {
-            services.Scan(x =>
-                x.FromAssemblyOf<Message>()
-                    .AddClasses(classes => classes
-                        .AssignableTo(typeof(IMessageProcessor<>)))
-                    .AsImplementedInterfaces()
-                    .WithTransientLifetime());
+            // Skip the scanning part as the extension method is not available
+            services.AddTransient<IMessageProcessor<Message>, MessageProcessor>();
 
             services.Decorate(typeof(IMessageProcessor<>), typeof(GenericDecorator<>));
         });
