@@ -1,9 +1,9 @@
-﻿using System;
+using System;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Scrutor.Tests;
 
-public class TestBase
+public class ServiceProviderTestBase
 {
     protected static ServiceProvider ConfigureProvider(Action<IServiceCollection> configure)
     {

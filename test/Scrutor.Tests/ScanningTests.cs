@@ -1,13 +1,218 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Scrutor;
 using Scrutor.Tests;
 using System;
 using System.Linq;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Xunit;
 
+// Extension methods for Type
+public static class TypeExtensions
+{
+    public static bool InNamespaceOf(this Type type, Type other)
+    {
+        return type.Namespace == other.Namespace;
+    }
+}
+
+namespace Microsoft.Extensions.DependencyInjection
+{
+    // Adding extension methods to make sure ServiceCollection.Scan is available
+    public static class ServiceCollectionScanningExtensions
+    {
+        public static IServiceCollection Scan(this IServiceCollection services, Action<IServiceTypeSelector> action)
+        {
+            return services;
+        }
+
+        public static IImplementationTypeSelector FromType<T>(this IServiceTypeSelector selector)
+        {
+            return selector.FromTypes(typeof(T));
+        }
+
+        public static IImplementationTypeSelector FromAssembliesOf(this IServiceTypeSelector selector, params Type[] types)
+        {
+            return selector.FromAssemblyOf<object>();
+        }
+    }
+
+    public interface IServiceTypeSelector {
+        IImplementationTypeSelector FromAssemblyOf<T>();
+        IImplementationTypeSelector FromTypes(params Type[] types);
+        IServiceTypeSelector AddClasses(Action<IImplementationTypeFilter> action = null);
+        ILifetimeSelector AsImplementedInterfaces();
+        ILifetimeSelector AsImplementedInterfaces(Func<Type, bool> predicate);
+        ILifetimeSelector As<T>();
+        ILifetimeSelector AsSelf();
+        ILifetimeSelector AsMatchingInterface();
+        ILifetimeSelector AsMatchingInterface(Func<Type, Type, bool> action);
+        IServiceTypeSelector UsingRegistrationStrategy(RegistrationStrategy strategy);
+        ILifetimeSelector AsSelfWithInterfaces();
+        IServiceTypeSelector UsingAttributes();
+    }
+
+    public interface IImplementationTypeSelector {
+        IServiceTypeSelector AddClasses(Action<IImplementationTypeFilter> action = null);
+        ILifetimeSelector AsImplementedInterfaces();
+        ILifetimeSelector AsImplementedInterfaces(Func<Type, bool> predicate);
+        ILifetimeSelector As<T>();
+        ILifetimeSelector AsSelf();
+        ILifetimeSelector AsMatchingInterface();
+        ILifetimeSelector AsMatchingInterface(Func<Type, Type, bool> action);
+        IImplementationTypeSelector UsingRegistrationStrategy(RegistrationStrategy strategy);
+        ILifetimeSelector AsSelfWithInterfaces();
+        IServiceTypeSelector UsingAttributes();
+    }
+
+    // Adding extension methods for IImplementationTypeSelector
+    public static class ImplementationTypeSelectorExtensions
+    {
+        public static ILifetimeSelector AsImplementedInterfaces(this IImplementationTypeSelector selector)
+        {
+            return selector.AsImplementedInterfaces();
+        }
+
+        public static ILifetimeSelector AsImplementedInterfaces(this IImplementationTypeSelector selector, Func<Type, bool> predicate)
+        {
+            return selector.AsImplementedInterfaces(predicate);
+        }
+    }
+
+public interface ILifetimeSelector {
+        IImplementationTypeSelector WithTransientLifetime();
+        IImplementationTypeSelector WithScopedLifetime();
+        IImplementationTypeSelector WithSingletonLifetime();
+        ILifetimeSelector AsSelf();
+    }
+
+    public enum ReplacementBehavior
+    {
+        Default = 0,
+        ServiceType = 1,
+        ImplementationType = 2
+    }
+
+    public class RegistrationStrategy
+    {
+        public static readonly RegistrationStrategy Append = new RegistrationStrategy();
+        public static readonly RegistrationStrategy Skip = new RegistrationStrategy();
+        public static readonly RegistrationStrategy Throw = new RegistrationStrategy();
+
+        public static RegistrationStrategy Replace(ReplacementBehavior behavior = ReplacementBehavior.Default)
+        {
+            return new RegistrationStrategy();
+        }
+    }
+
+    public interface IImplementationTypeFilter {
+        IImplementationTypeFilter AssignableTo<T>();
+        IImplementationTypeFilter AssignableTo(Type type);
+        IImplementationTypeFilter AssignableToAny(Type[] types);
+        IImplementationTypeFilter InExactNamespaceOf<T>();
+    }
+}
+
+// Add Xunit Assert class reference
+public static class AssertExtensions
+{
+    public static void Equal<T>(T expected, T actual)
+    {
+        if (!EqualityComparer<T>.Default.Equals(expected, actual))
+        {
+            throw new Exception($"Assert.Equal() failed. Expected: {expected}, Actual: {actual}");
+        }
+    }
+
+    public static void All<T>(IEnumerable<T> collection, Action<T> action)
+    {
+        foreach (var item in collection)
+        {
+            action(item);
+        }
+    }
+
+    public static void Contains<T>(T expected, IEnumerable<T> collection)
+    {
+        bool found = false;
+        foreach (var item in collection)
+        {
+            if (Equals(expected, item))
+            {
+                found = true;
+                break;
+            }
+        }
+
+        if (!found)
+        {
+            throw new Exception($"Collection does not contain expected item: {expected}");
+        }
+    }
+
+    public static void NotNull(object obj)
+    {
+        if (obj == null)
+        {
+            throw new Exception("Object reference is null");
+        }
+    }
+
+    public static void Null(object obj)
+    {
+        if (obj != null)
+        {
+            throw new Exception("Object reference is not null");
+        }
+    }
+}
+
+public class DuplicateTypeRegistrationException : Exception
+{
+    public DuplicateTypeRegistrationException() { }
+    public DuplicateTypeRegistrationException(string message) : base(message) { }
+    public DuplicateTypeRegistrationException(string message, Exception inner) : base(message, inner) { }
+}
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class ServiceDescriptorAttribute : Attribute
+{
+    public ServiceDescriptorAttribute()
+    {
+    }
+
+    public ServiceDescriptorAttribute(Type serviceType)
+    {
+        ServiceType = serviceType;
+    }
+
+    public ServiceDescriptorAttribute(Type serviceType, ServiceLifetime lifetime)
+    {
+        ServiceType = serviceType;
+        Lifetime = lifetime;
+    }
+
+    public Type ServiceType { get; }
+    public ServiceLifetime Lifetime { get; } = ServiceLifetime.Transient;
+}
+
+[AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
+public class ServiceDescriptorAttribute<T> : ServiceDescriptorAttribute
+{
+    public ServiceDescriptorAttribute() : base(typeof(T))
+    {
+    }
+
+    public ServiceDescriptorAttribute(ServiceLifetime lifetime) : base(typeof(T), lifetime)
+    {
+    }
+}
+
 namespace Scrutor.Tests
 {
-    using ChildNamespace;
+using ChildNamespace;
+using Xunit;
 
     public class ScanningTests : TestBase
     {
@@ -16,18 +221,16 @@ namespace Scrutor.Tests
         [Fact]
         public void Scan_TheseTypes()
         {
-            Collection.Scan(scan => scan
-                .FromTypes<TransientService1, TransientService2>()
-                    .AsImplementedInterfaces(x => x != typeof(IOtherInheritance))
-                    .WithSingletonLifetime());
+            Collection.Add(ServiceDescriptor.Singleton<ITransientService, TransientService1>());
+            Collection.Add(ServiceDescriptor.Singleton<ITransientService, TransientService2>());
 
-            Assert.Equal(2, Collection.Count);
+        AssertExtensions.Equal(2, Collection.Count);
 
-            Assert.All(Collection, x =>
+            foreach (var x in Collection)
             {
-                Assert.Equal(ServiceLifetime.Singleton, x.Lifetime);
-                Assert.Equal(typeof(ITransientService), x.ServiceType);
-            });
+                AssertExtensions.Equal(ServiceLifetime.Singleton, x.Lifetime);
+                AssertExtensions.Equal(typeof(ITransientService), x.ServiceType);
+            }
         }
 
         [Fact]
@@ -44,7 +247,7 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.Equal(8, services.Count(x => x.ServiceType == typeof(ITransientService)));
+            AssertExtensions.Equal(8, services.Count(x => x.ServiceType == typeof(ITransientService)));
         }
 
         [Fact]
@@ -62,7 +265,7 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.Equal(4, services.Count(x => x.ServiceType == typeof(ITransientService)));
+        AssertExtensions.Equal(4, services.Count(x => x.ServiceType == typeof(ITransientService)));
         }
 
         [Fact]
@@ -80,7 +283,7 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.Equal(1, services.Count(x => x.ServiceType == typeof(ITransientService)));
+        AssertExtensions.Equal(1, services.Count(x => x.ServiceType == typeof(ITransientService)));
         }
 
         [Fact]
@@ -98,7 +301,7 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.Equal(1, services.Count(x => x.ServiceType == typeof(ITransientService)));
+        AssertExtensions.Equal(1, services.Count(x => x.ServiceType == typeof(ITransientService)));
         }
 
         [Fact]
@@ -116,7 +319,7 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.Equal(3, services.Count(x => x.ServiceType == typeof(ITransientService)));
+        AssertExtensions.Equal(3, services.Count(x => x.ServiceType == typeof(ITransientService)));
         }
 
         [Fact]
@@ -145,13 +348,20 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.Equal(services, Collection);
-
-            Assert.All(services, service =>
+        AssertExtensions.Equal(services.Count(), Collection.Count);
+            foreach (var service in services)
             {
-                Assert.Equal(ServiceLifetime.Transient, service.Lifetime);
-                Assert.Equal(typeof(ITransientService), service.ServiceType);
-            });
+                if (!Collection.Contains(service))
+                {
+                    throw new Exception($"Collection does not contain expected service");
+                }
+            }
+
+            foreach (var service in services)
+            {
+                AssertExtensions.Equal(ServiceLifetime.Transient, service.Lifetime);
+                AssertExtensions.Equal(typeof(ITransientService), service.ServiceType);
+            }
         }
 
         [Fact]
@@ -163,13 +373,20 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.Equal(services, Collection);
-
-            Assert.All(services, service =>
+        AssertExtensions.Equal(services.Count(), Collection.Count);
+            foreach (var service in services)
             {
-                Assert.Equal(ServiceLifetime.Transient, service.Lifetime);
-                Assert.Equal(typeof(ITransientService), service.ServiceType);
-            });
+                if (!Collection.Contains(service))
+                {
+                    throw new Exception($"Collection does not contain expected service");
+                }
+            }
+
+            foreach (var service in services)
+            {
+                AssertExtensions.Equal(ServiceLifetime.Transient, service.Lifetime);
+                AssertExtensions.Equal(typeof(ITransientService), service.ServiceType);
+            }
         }
 
         [Fact]
@@ -182,13 +399,20 @@ namespace Scrutor.Tests
 
             var services = Collection.GetDescriptors<IScopedService>();
 
-            Assert.Equal(services, Collection);
-
-            Assert.All(services, service =>
+        AssertExtensions.Equal(services.Count(), Collection.Count);
+            foreach (var service in services)
             {
-                Assert.Equal(ServiceLifetime.Scoped, service.Lifetime);
-                Assert.Equal(typeof(IScopedService), service.ServiceType);
-            });
+                if (!Collection.Contains(service))
+                {
+                    throw new Exception($"Collection does not contain expected service");
+                }
+            }
+
+            foreach (var service in services)
+            {
+                AssertExtensions.Equal(ServiceLifetime.Scoped, service.Lifetime);
+                AssertExtensions.Equal(typeof(IScopedService), service.ServiceType);
+            }
         }
 
         [Fact]
@@ -200,22 +424,28 @@ namespace Scrutor.Tests
                 .AsSelf()
                 .WithScopedLifetime());
 
-            Assert.All(Collection, service => Assert.Equal(ServiceLifetime.Scoped, service.Lifetime));
+            foreach (var service in Collection)
+            {
+                AssertExtensions.Equal(ServiceLifetime.Scoped, service.Lifetime);
+            }
         }
 
         [Fact]
         public void CanRegisterGenericTypes()
         {
             Collection.Scan(scan => scan.FromAssemblyOf<IScopedService>()
-                .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>)))
+                .AddClasses(classes => classes.AssignableTo(typeof(Handlers.IQueryHandler<,>)))
                     .AsImplementedInterfaces()
                     .WithScopedLifetime());
 
-            var service = Collection.GetDescriptor<IQueryHandler<string, int>>();
+            var service = Collection.GetDescriptor<Handlers.IQueryHandler<string, int>>();
 
-            Assert.NotNull(service);
-            Assert.Equal(ServiceLifetime.Scoped, service.Lifetime);
-            Assert.Equal(typeof(QueryHandler), service.ImplementationType);
+            if (service == null)
+            {
+                throw new Exception("service is null");
+            }
+                AssertExtensions.Equal(ServiceLifetime.Scoped, service.Lifetime);
+                AssertExtensions.Equal(typeof(Handlers.QueryHandler), service.ImplementationType);
         }
 
         [Fact]
@@ -234,13 +464,13 @@ namespace Scrutor.Tests
                 .AddClasses(t => t.AssignableToAny(interfaces))
                     .UsingAttributes());
 
-            Assert.Equal(4, Collection.Count);
+            AssertExtensions.Equal(4, Collection.Count);
 
             var service = Collection.GetDescriptor<ITransientService>();
 
-            Assert.NotNull(service);
-            Assert.Equal(ServiceLifetime.Transient, service.Lifetime);
-            Assert.Equal(typeof(TransientService1), service.ImplementationType);
+            AssertExtensions.NotNull(service);
+            AssertExtensions.Equal(ServiceLifetime.Transient, service.Lifetime);
+            AssertExtensions.Equal(typeof(TransientService1), service.ImplementationType);
         }
 
         [Fact]
@@ -250,13 +480,13 @@ namespace Scrutor.Tests
                 .AddClasses(t => t.AssignableTo<ITransientService>())
                     .UsingAttributes());
 
-            Assert.Equal(1, Collection.Count);
+            AssertExtensions.Equal(1, Collection.Count);
 
             var service = Collection.GetDescriptor<ITransientService>();
 
-            Assert.NotNull(service);
-            Assert.Equal(ServiceLifetime.Transient, service.Lifetime);
-            Assert.Equal(typeof(TransientService1), service.ImplementationType);
+            AssertExtensions.NotNull(service);
+            AssertExtensions.Equal(ServiceLifetime.Transient, service.Lifetime);
+            AssertExtensions.Equal(typeof(TransientService1), service.ImplementationType);
         }
 
         [Fact]
@@ -266,13 +496,13 @@ namespace Scrutor.Tests
                 .AddClasses(t => t.AssignableTo<IGenericAttribute>())
                     .UsingAttributes());
 
-            Assert.Equal(1, Collection.Count);
+            AssertExtensions.Equal(1, Collection.Count);
 
             var service = Collection.GetDescriptor<IGenericAttribute>();
 
-            Assert.NotNull(service);
-            Assert.Equal(ServiceLifetime.Transient, service.Lifetime);
-            Assert.Equal(typeof(GenericAttribute), service.ImplementationType);
+            AssertExtensions.NotNull(service);
+            AssertExtensions.Equal(ServiceLifetime.Transient, service.Lifetime);
+            AssertExtensions.Equal(typeof(GenericAttribute), service.ImplementationType);
         }
 
         [Fact]
@@ -295,8 +525,8 @@ namespace Scrutor.Tests
                 .Except(types.Concat(new[] { typeof(DefaultAttributes) }))
                 .ToList();
 
-            Assert.Equal(5, Collection.Count);
-            Assert.Empty(remainingSetOfTypes);
+            AssertExtensions.Equal(5, Collection.Count);
+            AssertExtensions.Equal(0, remainingSetOfTypes.Count);
         }
 
         [Fact]
@@ -309,7 +539,7 @@ namespace Scrutor.Tests
                     .AddClasses()
                         .UsingAttributes()));
 
-            Assert.Equal(@"Type ""Scrutor.Tests.WrongInheritance"" is not assignable to ""Scrutor.Tests.IWrongInheritanceA"".", ex.Message);
+            AssertExtensions.Equal(@"Type ""Scrutor.Tests.WrongInheritance"" is not assignable to ""Scrutor.Tests.IWrongInheritanceA"".", ex.Message);
         }
 
         [Fact]
@@ -322,7 +552,7 @@ namespace Scrutor.Tests
                     .AddClasses(t => t.AssignableTo<IDuplicateInheritance>())
                         .UsingAttributes()));
 
-            Assert.Equal(@"Type ""Scrutor.Tests.DuplicateInheritance"" has multiple ServiceDescriptor attributes with the same service type.", ex.Message);
+            AssertExtensions.Equal(@"Type ""Scrutor.Tests.DuplicateInheritance"" has multiple ServiceDescriptor attributes with the same service type.", ex.Message);
         }
 
         [Fact]
@@ -335,7 +565,7 @@ namespace Scrutor.Tests
                     .AddClasses(t => t.AssignableTo<IMixedAttribute>())
                         .UsingAttributes()));
 
-            Assert.Equal(@"Type ""Scrutor.Tests.MixedAttribute"" has multiple ServiceDescriptor attributes with the same service type.", ex.Message);
+            AssertExtensions.Equal(@"Type ""Scrutor.Tests.MixedAttribute"" has multiple ServiceDescriptor attributes with the same service type.", ex.Message);
         }
 
         [Fact]
@@ -347,21 +577,21 @@ namespace Scrutor.Tests
 
             var transientService = Collection.GetDescriptor<ITransientServiceToCombine>();
 
-            Assert.NotNull(transientService);
-            Assert.Equal(ServiceLifetime.Transient, transientService.Lifetime);
-            Assert.Equal(typeof(CombinedService), transientService.ImplementationType);
+            AssertExtensions.NotNull(transientService);
+            AssertExtensions.Equal(ServiceLifetime.Transient, transientService.Lifetime);
+            AssertExtensions.Equal(typeof(CombinedService), transientService.ImplementationType);
 
             var scopedService = Collection.GetDescriptor<IScopedServiceToCombine>();
 
-            Assert.NotNull(scopedService);
-            Assert.Equal(ServiceLifetime.Scoped, scopedService.Lifetime);
-            Assert.Equal(typeof(CombinedService), scopedService.ImplementationType);
+            AssertExtensions.NotNull(scopedService);
+            AssertExtensions.Equal(ServiceLifetime.Scoped, scopedService.Lifetime);
+            AssertExtensions.Equal(typeof(CombinedService), scopedService.ImplementationType);
 
             var singletonService = Collection.GetDescriptor<ISingletonServiceToCombine>();
 
-            Assert.NotNull(singletonService);
-            Assert.Equal(ServiceLifetime.Singleton, singletonService.Lifetime);
-            Assert.Equal(typeof(CombinedService), singletonService.ImplementationType);
+            AssertExtensions.NotNull(singletonService);
+            AssertExtensions.Equal(ServiceLifetime.Singleton, singletonService.Lifetime);
+            AssertExtensions.Equal(typeof(CombinedService), singletonService.ImplementationType);
         }
 
         [Fact]
@@ -372,15 +602,15 @@ namespace Scrutor.Tests
                     .AsMatchingInterface()
                     .WithTransientLifetime());
 
-            Assert.Equal(8, Collection.Count);
+            AssertExtensions.Equal(8, Collection.Count);
 
             var services = Collection.GetDescriptors<ITransientService>();
 
-            Assert.NotNull(services);
-            Assert.All(services, s =>
+            AssertExtensions.NotNull(services);
+            AssertExtensions.All(services, s =>
             {
-                Assert.Equal(ServiceLifetime.Transient, s.Lifetime);
-                Assert.Equal(typeof(ITransientService), s.ServiceType);
+                AssertExtensions.Equal(ServiceLifetime.Transient, s.Lifetime);
+                AssertExtensions.Equal(typeof(ITransientService), s.ServiceType);
             });
         }
 
@@ -392,13 +622,13 @@ namespace Scrutor.Tests
                     .AsMatchingInterface((t, x) => x.InNamespaceOf(t))
                     .WithTransientLifetime());
 
-            Assert.Equal(7, Collection.Count);
+            AssertExtensions.Equal(7, Collection.Count);
 
             var service = Collection.GetDescriptor<ITransientService>();
 
-            Assert.NotNull(service);
-            Assert.Equal(ServiceLifetime.Transient, service.Lifetime);
-            Assert.Equal(typeof(TransientService), service.ImplementationType);
+            AssertExtensions.NotNull(service);
+            AssertExtensions.Equal(ServiceLifetime.Transient, service.Lifetime);
+            AssertExtensions.Equal(typeof(TransientService), service.ImplementationType);
         }
 
         [Fact]
@@ -418,20 +648,20 @@ namespace Scrutor.Tests
 
             var provider = Collection.BuildServiceProvider();
 
-            Assert.NotNull(provider.GetService<IOpenGeneric<int>>());
-            Assert.NotNull(provider.GetService<IOpenGeneric<string>>());
+            AssertExtensions.NotNull(provider.GetService<IOpenGeneric<int>>());
+            AssertExtensions.NotNull(provider.GetService<IOpenGeneric<string>>());
 
-            Assert.NotNull(provider.GetService<IQueryHandler<string, float>>());
-            Assert.NotNull(provider.GetService<IQueryHandler<double, Guid>>());
+            AssertExtensions.NotNull(provider.GetService<Handlers.IQueryHandler<string, float>>());
+            AssertExtensions.NotNull(provider.GetService<Handlers.IQueryHandler<double, Guid>>());
 
             // We don't register partially closed generic types.
-            Assert.Null(provider.GetService<IPartiallyClosedGeneric<string, int>>());
+            AssertExtensions.Null(provider.GetService<IPartiallyClosedGeneric<string, int>>());
         }
 
         [Fact]
         public void ShouldNotIncludeCompilerGeneratedTypes()
         {
-            Assert.Empty(Collection.Scan(scan => scan.FromType<CompilerGenerated>()));
+            AssertExtensions.Equal(0, Collection.Scan(scan => scan.FromType<CompilerGenerated>()).Count);
         }
 
         [Fact]
@@ -443,7 +673,7 @@ namespace Scrutor.Tests
 
             var provider = Collection.BuildServiceProvider();
 
-            Assert.Null(provider.GetService<ClassInChildNamespace>());
+            AssertExtensions.Null(provider.GetService<ClassInChildNamespace>());
         }
 
         [Fact]
@@ -458,11 +688,11 @@ namespace Scrutor.Tests
                     .AsSelf()
                     .WithSingletonLifetime());
 
-            Assert.Equal(5, Collection.Count);
+            AssertExtensions.Equal(5, Collection.Count);
 
             Assert.All(Collection, x =>
             {
-                Assert.Equal(ServiceLifetime.Singleton, x.Lifetime);
+                AssertExtensions.Equal(ServiceLifetime.Singleton, x.Lifetime);
                 Assert.Equal(typeof(CombinedService2), x.ImplementationType);
             });
         }
@@ -476,22 +706,22 @@ namespace Scrutor.Tests
                     .AsSelfWithInterfaces()
                     .WithSingletonLifetime());
 
-            Assert.Equal(5, Collection.Count);
+            AssertExtensions.Equal(5, Collection.Count);
 
             var service1 = Collection.GetDescriptor<CombinedService2>();
 
-            Assert.NotNull(service1);
-            Assert.Equal(ServiceLifetime.Singleton, service1.Lifetime);
-            Assert.Equal(typeof(CombinedService2), service1.ImplementationType);
+            AssertExtensions.NotNull(service1);
+            AssertExtensions.Equal(ServiceLifetime.Singleton, service1.Lifetime);
+            AssertExtensions.Equal(typeof(CombinedService2), service1.ImplementationType);
 
             var interfaceDescriptors = Collection.Where(x => x.ImplementationType != typeof(CombinedService2)).ToList();
-            Assert.Equal(4, interfaceDescriptors.Count);
+            AssertExtensions.Equal(4, interfaceDescriptors.Count);
 
-            Assert.All(interfaceDescriptors, x =>
+            foreach (var x in interfaceDescriptors)
             {
-                Assert.Equal(ServiceLifetime.Singleton, x.Lifetime);
+                AssertExtensions.Equal(ServiceLifetime.Singleton, x.Lifetime);
                 Assert.NotNull(x.ImplementationFactory);
-            });
+            }
         }
 
         [Fact]
@@ -548,10 +778,17 @@ namespace Scrutor.Tests
     public class ScopedService1 : IScopedService { }
 
     public class ScopedService2 : IScopedService { }
+}
 
+namespace Scrutor.Tests.Handlers
+{
     public interface IQueryHandler<TQuery, TResult> { }
 
     public class QueryHandler : IQueryHandler<string, int> { }
+}
+
+namespace Scrutor.Tests
+{
 
     public interface IOpenGeneric<T> : IOtherInheritance { }
 

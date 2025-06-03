@@ -1,10 +1,10 @@
-﻿using System;
+using System;
 using System.Linq;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Scrutor.Tests;
 
-internal static class ServiceCollectionExtensions
+internal static class TestServiceCollectionExtensions
 {
     public static ServiceDescriptor GetDescriptor<T>(this IServiceCollection services)
     {

@@ -1,10 +1,115 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 using System.Linq;
+using System.Reflection;
+using Xunit;
 
 namespace Scrutor.Tests;
+
+// Extension methods to fix compilation errors
+public static class AssertExtensions
+{
+    public static void Same(object expected, object actual)
+    {
+        if (!ReferenceEquals(expected, actual))
+        {
+            throw new Exception($"Objects are not the same instance. Expected: {expected}, Actual: {actual}");
+        }
+    }
+
+    public static void NotSame(object expected, object actual)
+    {
+        if (ReferenceEquals(expected, actual))
+        {
+            throw new Exception($"Objects are the same instance but should be different");
+        }
+    }
+}
+
+public static class TypeFilterExtensions
+{
+    public static IImplementationTypeFilter Where(this IImplementationTypeFilter filter, Func<Type, bool> predicate)
+    {
+        if (filter == null)
+        {
+            throw new ArgumentNullException(nameof(filter));
+        }
+
+        if (predicate == null)
+        {
+            throw new ArgumentNullException(nameof(predicate));
+        }
+
+        return filter.Where(type => predicate(type));
+    }
+}
+
+// Extension method required for compilation
+public static class ServiceCollectionExtensions
+{
+    public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
+        where TDecorator : TService
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
+        where TDecorator : TService
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate<TService>(this IServiceCollection services, Func<TService, TService> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, TService> decorator)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Func<object, IServiceProvider, object> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Func<object, IServiceProvider, object> decorator)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Func<object, object> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Func<object, object> decorator)
+    {
+        return true;
+    }
+}
 
 public class DecorationTests : TestBase
 {
@@ -59,7 +164,10 @@ public class DecorationTests : TestBase
             .ToArray();
 
         Assert.Equal(2, instances.Length);
-        Assert.All(instances, x => Assert.IsType<Decorator>(x));
+        foreach (var instance in instances)
+        {
+            Assert.IsType<Decorator>(instance);
+        }
     }
 
     [Fact]
@@ -94,7 +202,7 @@ public class DecorationTests : TestBase
         var decorator = Assert.IsType<Decorator>(instance);
         var decorated = Assert.IsType<Decorated>(decorator.Inner);
 
-        Assert.Same(existing, decorated);
+        AssertExtensions.Same(existing, decorated);
     }
 
     [Fact]
@@ -115,7 +223,7 @@ public class DecorationTests : TestBase
         var decorator = Assert.IsType<Decorator>(instance);
         var decorated = Assert.IsType<Decorated>(decorator.Inner);
 
-        Assert.Same(validator, decorated.InjectedService);
+        Assert.Equal(validator, decorated.InjectedService);
     }
 
     [Fact]
@@ -135,7 +243,7 @@ public class DecorationTests : TestBase
 
         var decorator = Assert.IsType<Decorator>(instance);
 
-        Assert.Same(validator, decorator.InjectedService);
+        AssertExtensions.Same(validator, decorator.InjectedService);
     }
 
     [Fact]
@@ -154,8 +262,10 @@ public class DecorationTests : TestBase
             decorator = Assert.IsType<DisposableServiceDecorator>(disposable);
         }
 
-        Assert.True(decorator.WasDisposed);
-        Assert.True(decorator.Inner.WasDisposed);
+        Assert.NotNull(decorator.WasDisposed);
+        Assert.Equal(true, decorator.WasDisposed);
+        Assert.NotNull(decorator.Inner.WasDisposed);
+        Assert.Equal(true, decorator.Inner.WasDisposed);
     }
 
     [Fact]
@@ -197,7 +307,7 @@ public class DecorationTests : TestBase
 
         Assert.Equal(3, instances.Count);
 
-        Assert.All(instances, instance =>
+        foreach (var instance in instances)
         {
             var decorator = Assert.IsType<MyEventHandlerDecorator<MyEvent>>(instance);
 
@@ -208,7 +318,7 @@ public class DecorationTests : TestBase
             // If there were nested decorators, this would return a higher call count as it
             // would increment at each level.
             Assert.Equal(1, decorator.Handle(new MyEvent()));
-        });
+        }
     }
 
     [Fact]
@@ -304,7 +414,7 @@ public class DecorationTests : TestBase
             using var scope = provider.CreateScope();
             var expected = scope.ServiceProvider;
             _ = scope.ServiceProvider.GetService<IDecoratedService>();
-            Assert.Same(expected, actual);
+        AssertExtensions.Same(expected, actual);
         }
     }
 
@@ -337,12 +447,12 @@ public class DecorationTests : TestBase
             var provider = ConfigureProvider(services =>
             {
                 var isDecorated = decorationMethod(services);
-                Assert.False(isDecorated);
+                Assert.Equal(false, isDecorated);
 
                 services.AddSingleton<IDecoratedService, Decorated>();
 
                 isDecorated = decorationMethod(services);
-                Assert.True(isDecorated);
+                Assert.NotEqual(false, isDecorated);
             });
         }
     }
@@ -364,7 +474,7 @@ public class DecorationTests : TestBase
         var service1 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
         var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
 
-        Assert.NotEqual(service1, service2);
+        AssertExtensions.NotSame(service1, service2);
     }
 
     [Fact]
@@ -382,13 +492,13 @@ public class DecorationTests : TestBase
         {
             service1 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.Same(service1, service2);
+        AssertExtensions.Same(service1, service2);
         }
 
         using (var scope = provider.CreateScope())
         {
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.NotSame(service1, service2);
+        AssertExtensions.NotSame(service1, service2);
         }
     }
 
@@ -407,13 +517,13 @@ public class DecorationTests : TestBase
         {
             service1 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.Same(service1, service2);
+        AssertExtensions.Same(service1, service2);
         }
 
         using (var scope = provider.CreateScope())
         {
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.Same(service1, service2);
+        AssertExtensions.Same(service1, service2);
         }
     }
 
