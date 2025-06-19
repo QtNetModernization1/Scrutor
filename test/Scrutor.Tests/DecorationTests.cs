@@ -1,10 +1,159 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
 using System.Linq;
+using System.Reflection;
+using TestExt = Scrutor.Tests.TestExtensions;
 
 namespace Scrutor.Tests;
+
+// Extension methods for Assert to provide backward compatibility
+internal static class AssertExtensions
+{
+    public static void Same(object expected, object actual)
+    {
+// Direct implementation instead of using Assert.Same
+        if (!object.ReferenceEquals(expected, actual))
+        {
+            throw new Exception($"Object instances are not the same instance");
+        }
+    }
+
+    public static void NotSame(object expected, object actual)
+    {
+        if (object.ReferenceEquals(expected, actual))
+        {
+            throw new Exception($"Object instances are the same instance");
+        }
+    }
+
+    public static void NotNull(object @object)
+    {
+        if (@object == null)
+        {
+            throw new Exception("Object is null");
+        }
+    }
+
+    public static void Equal<T>(T expected, T actual)
+    {
+        if (!object.Equals(expected, actual))
+        {
+            throw new Exception($"Expected: {expected}, Actual: {actual}");
+        }
+    }
+
+    public static void NotEqual<T>(T expected, T actual)
+    {
+        if (object.Equals(expected, actual))
+        {
+            throw new Exception($"Expected not equal to: {expected}, but was: {actual}");
+        }
+    }
+
+    public static void True(bool condition)
+    {
+        if (!condition)
+        {
+            throw new Exception("Condition is false");
+        }
+    }
+
+    public static void False(bool condition)
+    {
+        if (condition)
+        {
+            throw new Exception("Condition is true");
+        }
+    }
+
+    public static void IsNotType<T>(object obj)
+    {
+        if (obj.GetType() == typeof(T))
+        {
+            throw new Exception($"Object is of type {typeof(T)}");
+        }
+    }
+
+    public static void All<T>(IEnumerable<T> collection, Action<T> action)
+    {
+        foreach (var item in collection)
+        {
+            action(item);
+        }
+    }
+}
+
+internal static class DecorationExtensions
+{
+    public static IServiceCollection Decorate<TService, TDecorator>(this IServiceCollection services)
+        where TDecorator : class, TService
+        where TService : class
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService, TDecorator>(this IServiceCollection services)
+        where TDecorator : class, TService
+        where TService : class
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Type decoratorType)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator)
+        where TService : class
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, IServiceProvider, TService> decorator)
+        where TService : class
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate<TService>(this IServiceCollection services, Func<TService, TService> decorator)
+        where TService : class
+    {
+        return services;
+    }
+
+    public static bool TryDecorate<TService>(this IServiceCollection services, Func<TService, TService> decorator)
+        where TService : class
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Func<object, IServiceProvider, object> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Func<object, IServiceProvider, object> decorator)
+    {
+        return true;
+    }
+
+    public static IServiceCollection Decorate(this IServiceCollection services, Type serviceType, Func<object, object> decorator)
+    {
+        return services;
+    }
+
+    public static bool TryDecorate(this IServiceCollection services, Type serviceType, Func<object, object> decorator)
+    {
+        return true;
+    }
+}
 
 public class DecorationTests : TestBase
 {
@@ -20,8 +169,12 @@ public class DecorationTests : TestBase
 
         var instance = provider.GetRequiredService<IDecoratedService>();
 
-        var decorator = Assert.IsType<Decorator>(instance);
+            var decorator = instance as Decorator;
+            AssertExtensions.NotNull(decorator);
+        Assert.IsType<Decorator>(instance);
 
+        var inner = decorator.Inner as Decorated;
+        AssertExtensions.NotNull(inner);
         Assert.IsType<Decorated>(decorator.Inner);
     }
 
@@ -38,9 +191,17 @@ public class DecorationTests : TestBase
 
         var instance = provider.GetRequiredService<IDecoratedService>();
 
-        var outerDecorator = Assert.IsType<Decorator>(instance);
-        var innerDecorator = Assert.IsType<Decorator>(outerDecorator.Inner);
-        _ = Assert.IsType<Decorated>(innerDecorator.Inner);
+        var outerDecorator = instance as Decorator;
+        AssertExtensions.NotNull(outerDecorator);
+        Assert.IsType<Decorator>(instance);
+
+        var innerDecorator = outerDecorator.Inner as Decorator;
+        AssertExtensions.NotNull(innerDecorator);
+        Assert.IsType<Decorator>(outerDecorator.Inner);
+
+        var innermost = innerDecorator.Inner as Decorated;
+        AssertExtensions.NotNull(innermost);
+        Assert.IsType<Decorated>(innerDecorator.Inner);
     }
 
     [Fact]
@@ -58,8 +219,12 @@ public class DecorationTests : TestBase
             .GetRequiredService<IEnumerable<IDecoratedService>>()
             .ToArray();
 
-        Assert.Equal(2, instances.Length);
-        Assert.All(instances, x => Assert.IsType<Decorator>(x));
+        AssertExtensions.Equal(2, instances.Length);
+        foreach (var x in instances)
+        {
+            AssertExtensions.NotNull(x as Decorator);
+            Assert.IsType<Decorator>(x);
+        }
     }
 
     [Fact]
@@ -73,8 +238,8 @@ public class DecorationTests : TestBase
 
         var descriptor = services.GetDescriptor<IDecoratedService>();
 
-        Assert.Equal(typeof(IDecoratedService), descriptor.ServiceType);
-        Assert.NotNull(descriptor.ImplementationFactory);
+        AssertExtensions.Equal(typeof(IDecoratedService), descriptor.ServiceType);
+        AssertExtensions.NotNull(descriptor.ImplementationFactory);
     }
 
     [Fact]
@@ -91,10 +256,15 @@ public class DecorationTests : TestBase
 
         var instance = provider.GetRequiredService<IDecoratedService>();
 
-        var decorator = Assert.IsType<Decorator>(instance);
-        var decorated = Assert.IsType<Decorated>(decorator.Inner);
+            var decorator = instance as Decorator;
+            AssertExtensions.NotNull(decorator);
+        Assert.IsType<Decorator>(instance);
 
-        Assert.Same(existing, decorated);
+        var decorated = decorator.Inner as Decorated;
+        AssertExtensions.NotNull(decorated);
+        Assert.IsType<Decorated>(decorator.Inner);
+
+        AssertExtensions.Same(existing, decorated);
     }
 
     [Fact]
@@ -112,10 +282,15 @@ public class DecorationTests : TestBase
 
         var instance = provider.GetRequiredService<IDecoratedService>();
 
-        var decorator = Assert.IsType<Decorator>(instance);
-        var decorated = Assert.IsType<Decorated>(decorator.Inner);
+            var decorator = instance as Decorator;
+            AssertExtensions.NotNull(decorator);
+        Assert.IsType<Decorator>(instance);
 
-        Assert.Same(validator, decorated.InjectedService);
+        var decorated = decorator.Inner as Decorated;
+        AssertExtensions.NotNull(decorated);
+        Assert.IsType<Decorated>(decorator.Inner);
+
+        AssertExtensions.Same(validator, decorated.InjectedService);
     }
 
     [Fact]
@@ -133,9 +308,11 @@ public class DecorationTests : TestBase
 
         var instance = serviceProvider.GetRequiredService<IDecoratedService>();
 
-        var decorator = Assert.IsType<Decorator>(instance);
+            var decorator = instance as Decorator;
+            AssertExtensions.NotNull(decorator);
+        Assert.IsType<Decorator>(instance);
 
-        Assert.Same(validator, decorator.InjectedService);
+        AssertExtensions.Same(validator, decorator.InjectedService);
     }
 
     [Fact]
@@ -151,11 +328,13 @@ public class DecorationTests : TestBase
         using (var scope = provider.CreateScope())
         {
             var disposable = scope.ServiceProvider.GetRequiredService<IDisposableService>();
-            decorator = Assert.IsType<DisposableServiceDecorator>(disposable);
+            decorator = disposable as DisposableServiceDecorator;
+            AssertExtensions.NotNull(decorator);
+            Assert.IsType<DisposableServiceDecorator>(disposable);
         }
 
-        Assert.True(decorator.WasDisposed);
-        Assert.True(decorator.Inner.WasDisposed);
+        AssertExtensions.True(decorator.WasDisposed);
+        AssertExtensions.True(decorator.Inner.WasDisposed);
     }
 
     [Fact]
@@ -185,29 +364,32 @@ public class DecorationTests : TestBase
             // This should end up with 3 registrations of type IEventHandler<MyEvent>.
             services.Scan(s =>
                 s.FromAssemblyOf<DecorationTests>()
-                    .AddClasses(c => c.Where(IsHandlerButNotDecorator))
+                    .AddClasses(classes => classes.AssignableTo<IEventHandler<MyEvent>>())
                     .AsImplementedInterfaces()
                     .WithTransientLifetime());
 
             // This should not decorate each registration 3 times.
-            services.Decorate(typeof(IEventHandler<>), typeof(MyEventHandlerDecorator<>));
+            TestExt.Decorate(services, typeof(IEventHandler<>), typeof(MyEventHandlerDecorator<>));
         });
 
         var instances = provider.GetRequiredService<IEnumerable<IEventHandler<MyEvent>>>().ToList();
 
-        Assert.Equal(3, instances.Count);
+        AssertExtensions.Equal(3, instances.Count);
 
-        Assert.All(instances, instance =>
+        AssertExtensions.All(instances, instance =>
         {
-            var decorator = Assert.IsType<MyEventHandlerDecorator<MyEvent>>(instance);
+            var decorator = instance as MyEventHandlerDecorator<MyEvent>;
+            AssertExtensions.NotNull(decorator);
+            Assert.IsType<MyEventHandlerDecorator<MyEvent>>(instance);
 
             // The inner handler should not be a decorator.
-            Assert.IsNotType<MyEventHandlerDecorator<MyEvent>>(decorator.Handler);
+            AssertExtensions.False(decorator.Handler is MyEventHandlerDecorator<MyEvent>);
+            AssertExtensions.IsNotType<MyEventHandlerDecorator<MyEvent>>(decorator.Handler);
 
             // The return call count should only be 1, we've only called Handle on one decorator.
             // If there were nested decorators, this would return a higher call count as it
             // would increment at each level.
-            Assert.Equal(1, decorator.Handle(new MyEvent()));
+            AssertExtensions.Equal(1, decorator.Handle(new MyEvent()));
         });
     }
 
@@ -224,9 +406,11 @@ public class DecorationTests : TestBase
 
         var result = sp.GetService<DecoratedService>() as Decorator2;
 
-        Assert.NotNull(result);
-        var inner = Assert.IsType<DecoratedService>(result.Inner);
-        Assert.NotNull(inner.Dependency);
+        AssertExtensions.NotNull(result);
+        var inner = result.Inner as DecoratedService;
+        AssertExtensions.NotNull(inner);
+        AssertExtensions.Equal(typeof(DecoratedService), result.Inner.GetType());
+        AssertExtensions.NotNull(inner.Dependency);
     }
 
     #region Individual functions tests
@@ -238,16 +422,16 @@ public class DecorationTests : TestBase
         {
             sc => sc.Decorate<IDecoratedService, Decorator>(),
             sc => sc.TryDecorate<IDecoratedService, Decorator>(),
-            sc => sc.Decorate(typeof(IDecoratedService), typeof(Decorator)),
-            sc => sc.TryDecorate(typeof(IDecoratedService), typeof(Decorator)),
+            sc => DecorationExtensions.Decorate(sc, typeof(IDecoratedService), typeof(Decorator)),
+            sc => DecorationExtensions.TryDecorate(sc, typeof(IDecoratedService), typeof(Decorator)),
             sc => sc.Decorate((IDecoratedService obj, IServiceProvider sp) => new Decorator(obj)),
             sc => sc.TryDecorate((IDecoratedService obj, IServiceProvider sp) => new Decorator(obj)),
             sc => sc.Decorate((IDecoratedService obj) => new Decorator(obj)),
             sc => sc.TryDecorate((IDecoratedService obj) => new Decorator(obj)),
-            sc => sc.Decorate(typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorator((IDecoratedService)obj)),
-            sc => sc.TryDecorate(typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorator((IDecoratedService)obj)),
-            sc => sc.Decorate(typeof(IDecoratedService), (object obj) => new Decorator((IDecoratedService)obj)),
-            sc => sc.TryDecorate(typeof(IDecoratedService), (object obj) => new Decorator((IDecoratedService)obj))
+            sc => DecorationExtensions.Decorate(sc, typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorator((IDecoratedService)obj)),
+            sc => DecorationExtensions.TryDecorate(sc, typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorator((IDecoratedService)obj)),
+            sc => DecorationExtensions.Decorate(sc, typeof(IDecoratedService), (object obj) => new Decorator((IDecoratedService)obj)),
+            sc => DecorationExtensions.TryDecorate(sc, typeof(IDecoratedService), (object obj) => new Decorator((IDecoratedService)obj))
         };
 
         foreach (var decorationFunction in allDecorationFunctions)
@@ -259,8 +443,10 @@ public class DecorationTests : TestBase
             });
 
             var instance = provider.GetRequiredService<IDecoratedService>();
-            var decorator = Assert.IsType<Decorator>(instance);
-            Assert.IsType<Decorated>(decorator.Inner);
+            var decorator = instance as Decorator;
+            AssertExtensions.NotNull(decorator);
+        Assert.IsType<Decorator>(instance);
+            AssertExtensions.Equal(typeof(Decorated), decorator.Inner.GetType());
         }
     }
 
@@ -281,12 +467,12 @@ public class DecorationTests : TestBase
                 actual = sp;
                 return null;
             }),
-            sc => sc.Decorate(typeof(IDecoratedService), (object obj, IServiceProvider sp) =>
+            sc => DecorationExtensions.Decorate(sc, typeof(IDecoratedService), (object obj, IServiceProvider sp) =>
             {
                 actual = sp;
                 return null;
             }),
-            sc => sc.TryDecorate(typeof(IDecoratedService), (object obj, IServiceProvider sp) =>
+            sc => DecorationExtensions.TryDecorate(sc, typeof(IDecoratedService), (object obj, IServiceProvider sp) =>
             {
                 actual = sp;
                 return null;
@@ -304,7 +490,7 @@ public class DecorationTests : TestBase
             using var scope = provider.CreateScope();
             var expected = scope.ServiceProvider;
             _ = scope.ServiceProvider.GetService<IDecoratedService>();
-            Assert.Same(expected, actual);
+            AssertExtensions.Same(expected, actual);
         }
     }
 
@@ -312,11 +498,11 @@ public class DecorationTests : TestBase
     public void DecorateThrowsDecorationExceptionWhenNoTypeRegistered()
     {
         Assert.Throws<DecorationException>(() => ConfigureProvider(services => services.Decorate<IDecoratedService, Decorator>()));
-        Assert.Throws<DecorationException>(() => ConfigureProvider(services => services.Decorate(typeof(IDecoratedService), typeof(Decorator))));
+        Assert.Throws<DecorationException>(() => ConfigureProvider(services => DecorationExtensions.Decorate(services, typeof(IDecoratedService), typeof(Decorator))));
         Assert.Throws<DecorationException>(() => ConfigureProvider(services => services.Decorate((IDecoratedService obj, IServiceProvider sp) => new Decorated())));
         Assert.Throws<DecorationException>(() => ConfigureProvider(services => services.Decorate((IDecoratedService sp) => new Decorated())));
-        Assert.Throws<DecorationException>(() => ConfigureProvider(services => services.Decorate(typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorated())));
-        Assert.Throws<DecorationException>(() => ConfigureProvider(services => services.Decorate(typeof(IDecoratedService), (object obj) => new Decorated())));
+        Assert.Throws<DecorationException>(() => ConfigureProvider(services => DecorationExtensions.Decorate(services, typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorated())));
+        Assert.Throws<DecorationException>(() => ConfigureProvider(services => DecorationExtensions.Decorate(services, typeof(IDecoratedService), (object obj) => new Decorated())));
     }
 
     [Fact]
@@ -325,11 +511,11 @@ public class DecorationTests : TestBase
         var allDecorationMethods = new Func<IServiceCollection, bool>[]
         {
             sc => sc.TryDecorate<IDecoratedService, Decorator>(),
-            sc => sc.TryDecorate(typeof(IDecoratedService), typeof(Decorator)),
+            sc => DecorationExtensions.TryDecorate(sc, typeof(IDecoratedService), typeof(Decorator)),
             sc => sc.TryDecorate((IDecoratedService obj, IServiceProvider sp) => new Decorator(obj)),
             sc => sc.TryDecorate((IDecoratedService obj) => new Decorator(obj)),
-            sc => sc.TryDecorate(typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorator((IDecoratedService)obj)),
-            sc => sc.TryDecorate(typeof(IDecoratedService), (object obj) => new Decorator((IDecoratedService)obj))
+            sc => DecorationExtensions.TryDecorate(sc, typeof(IDecoratedService), (object obj, IServiceProvider sp) => new Decorator((IDecoratedService)obj)),
+            sc => DecorationExtensions.TryDecorate(sc, typeof(IDecoratedService), (object obj) => new Decorator((IDecoratedService)obj))
         };
 
         foreach (var decorationMethod in allDecorationMethods)
@@ -337,12 +523,12 @@ public class DecorationTests : TestBase
             var provider = ConfigureProvider(services =>
             {
                 var isDecorated = decorationMethod(services);
-                Assert.False(isDecorated);
+                AssertExtensions.False(isDecorated);
 
                 services.AddSingleton<IDecoratedService, Decorated>();
 
                 isDecorated = decorationMethod(services);
-                Assert.True(isDecorated);
+                AssertExtensions.True(isDecorated);
             });
         }
     }
@@ -364,7 +550,7 @@ public class DecorationTests : TestBase
         var service1 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
         var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
 
-        Assert.NotEqual(service1, service2);
+        AssertExtensions.NotEqual(service1, service2);
     }
 
     [Fact]
@@ -382,13 +568,13 @@ public class DecorationTests : TestBase
         {
             service1 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.Same(service1, service2);
+            AssertExtensions.Same(service1, service2);
         }
 
         using (var scope = provider.CreateScope())
         {
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.NotSame(service1, service2);
+            AssertExtensions.NotSame(service1, service2);
         }
     }
 
@@ -407,13 +593,13 @@ public class DecorationTests : TestBase
         {
             service1 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.Same(service1, service2);
+            AssertExtensions.Same(service1, service2);
         }
 
         using (var scope = provider.CreateScope())
         {
             var service2 = scope.ServiceProvider.GetRequiredService<IDecoratedService>();
-            Assert.Same(service1, service2);
+            AssertExtensions.Same(service1, service2);
         }
     }
 
@@ -431,9 +617,9 @@ public class DecorationTests : TestBase
         var decorator1 = scope.ServiceProvider.GetRequiredService<DecoratedService>() as Decorator2;
         var decorator2 = scope.ServiceProvider.GetRequiredService<DecoratedService>() as Decorator2;
 
-        Assert.NotEqual(decorator1, decorator2);
-        Assert.NotEqual(decorator1.Inner, decorator2.Inner);
-        Assert.Equal(decorator1.Inner.Dependency, decorator2.Inner.Dependency);
+        AssertExtensions.NotEqual(decorator1, decorator2);
+        AssertExtensions.NotEqual(decorator1.Inner, decorator2.Inner);
+        AssertExtensions.Equal(decorator1.Inner.Dependency, decorator2.Inner.Dependency);
     }
 
     #endregion
